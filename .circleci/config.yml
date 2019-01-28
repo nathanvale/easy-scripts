@@ -4,14 +4,25 @@ jobs:
     docker:
       - image: circleci/node:6
     steps:
-      # Configure your test steps here (checkout, npm install, cache management, tests etc...)
+      # Configure your test steps here (checkout, npm install, cache management,
+      # tests etc...)
+      - checkout
+      - run:
+          name: Yarn version
+          command: |
+            yarn version
 
   test_node_8:
     docker:
       - image: circleci/node:8
     steps:
-      # Configure your test steps here (checkout, npm install, cache management, tests etc...)
-
+      # Configure your test steps here (checkout, npm install, cache management,
+      # tests etc...)
+      - checkout
+      - run:
+          name: Yarn version
+          command: |
+            yarn version
   release:
     docker:
       - image: circleci/node:8
