@@ -1,7 +1,7 @@
 {
   "name": "ndv-scripts",
-  "version": "0.0.0-development",
-  "description": "This is a CLI that abstracts away all configuration for my open source projects for linting, testing, building, and more",
+  "version": "0.0.0-semantically-released",
+  "description": "This is a CLI that abstracts away the configuration of my open source projects. Why copy and paste the configuration of jest, prettier, commitlint, babel builds and more when you can share all this on npm?",
   "homepage": "https://github.com/nathanvale/ndv-scripts#readme",
   "bugs": {
     "url": "https://github.com/nathanvale/ndv-scripts/issues"
