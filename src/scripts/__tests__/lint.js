@@ -1,8 +1,8 @@
-import cases from 'jest-in-case';
-import { unquoteSerializer, winPathSerializer } from './helpers/serializers';
+import cases from 'jest-in-case'
+import {unquoteSerializer, winPathSerializer} from './helpers/serializers'
 
-expect.addSnapshotSerializer(unquoteSerializer);
-expect.addSnapshotSerializer(winPathSerializer);
+expect.addSnapshotSerializer(unquoteSerializer)
+expect.addSnapshotSerializer(winPathSerializer)
 
 cases(
   'lint',
@@ -14,34 +14,34 @@ cases(
     setup = () => () => {},
   }) => {
     // beforeEach
-    const { sync: crossSpawnSyncMock } = require('cross-spawn');
-    const originalArgv = process.argv;
-    const originalExit = process.exit;
+    const {sync: crossSpawnSyncMock} = require('cross-spawn')
+    const originalArgv = process.argv
+    const originalExit = process.exit
     Object.assign(utils, {
       hasPkgProp,
       hasFile,
-      resolveBin: (modName, { executable = modName } = {}) => executable,
-    });
-    process.exit = jest.fn();
-    const teardown = setup();
+      resolveBin: (modName, {executable = modName} = {}) => executable,
+    })
+    process.exit = jest.fn()
+    const teardown = setup()
 
-    process.argv = ['node', '../lint', ...args];
+    process.argv = ['node', '../lint', ...args]
 
     try {
       // tests
-      require('../lint');
-      expect(crossSpawnSyncMock).toHaveBeenCalledTimes(1);
-      const [firstCall] = crossSpawnSyncMock.mock.calls;
-      const [script, calledArgs] = firstCall;
-      expect([script, ...calledArgs].join(' ')).toMatchSnapshot();
+      require('../lint')
+      expect(crossSpawnSyncMock).toHaveBeenCalledTimes(1)
+      const [firstCall] = crossSpawnSyncMock.mock.calls
+      const [script, calledArgs] = firstCall
+      expect([script, ...calledArgs].join(' ')).toMatchSnapshot()
     } catch (error) {
-      throw error;
+      throw error
     } finally {
-      teardown();
+      teardown()
       // afterEach
-      process.exit = originalExit;
-      process.argv = originalArgv;
-      jest.resetModules();
+      process.exit = originalExit
+      process.argv = originalArgv
+      jest.resetModules()
     }
   },
   {
@@ -79,4 +79,4 @@ cases(
       ],
     },
   },
-);
+)

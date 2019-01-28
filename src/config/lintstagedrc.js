@@ -1,7 +1,7 @@
-const { resolveNdvScripts, resolveBin, isOptedOut } = require('../utils');
+const {resolveNdvScripts, resolveBin, isOptedOut} = require('../utils')
 
-const ndvScripts = resolveNdvScripts();
-const doctoc = resolveBin('doctoc');
+const ndvScripts = resolveNdvScripts()
+const doctoc = resolveBin('doctoc')
 
 module.exports = {
   concurrent: false,
@@ -19,4 +19,4 @@ module.exports = {
       isOptedOut('autoformat', null, 'git add'),
     ].filter(Boolean),
   },
-};
+}
