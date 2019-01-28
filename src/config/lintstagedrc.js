@@ -11,7 +11,6 @@ module.exports = {
       `${ndvScripts} contributors generate`,
       'git add README.md',
     ],
-    '**/*.{ts,tsx,js}': ['yarn lint', 'prettier --write', 'git add'],
     '**/*.+(js|json|less|css|ts|tsx|md)': [
       isOptedOut('autoformat', null, `${ndvScripts} format`),
       `${ndvScripts} lint`,

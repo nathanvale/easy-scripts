@@ -28,12 +28,12 @@ Usage: ../ [script] [--flags]
 
 Available Scripts:
   build
+  commitlint
   contributors
   format
   lint
   pre-commit
   test
-  travis-after-success
   validate
 
 Options:

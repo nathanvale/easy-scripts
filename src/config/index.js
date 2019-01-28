@@ -3,7 +3,7 @@ module.exports = {
   eslint: require('./eslintrc'),
   jest: require('./jest.config'),
   lintStaged: require('./lintstagedrc'),
-  prettier: require('./prettier.config'),
+  prettier: require('./prettierrc'),
   commitlint: require('./commitlint.config'),
   getRollupConfig: () => require('./rollup.config'),
 }
