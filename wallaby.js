@@ -30,7 +30,7 @@ module.exports = function(wallaby) {
     files,
     tests,
     compilers: {
-      '**/*.js': wallaby.compilers.babel({
+      '**/*.{js,ts,tsx}': wallaby.compilers.babel({
         babelrc: false,
         ...babelrc,
       }),
