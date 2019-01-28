@@ -1,5 +1,12 @@
 'use strict'
 
-const {prettier: prettierConfig} = require('./src/config')
-
-module.exports = Object.assign(prettierConfig, {})
+module.exports = {
+  printWidth: 80,
+  tabWidth: 2,
+  useTabs: false,
+  semi: false,
+  singleQuote: true,
+  trailingComma: 'all',
+  bracketSpacing: false,
+  jsxBracketSameLine: false,
+}
