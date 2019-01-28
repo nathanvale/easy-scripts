@@ -1,0 +1,24 @@
+{
+  "projectName": "ndv-scripts",
+  "projectOwner": "nathanvale",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "nathanvale",
+      "name": "Nathan Vale",
+      "avatar_url": "avatars1.githubusercontent.com/u/6100206?v=3",
+      "profile": "https://nathanvale.com",
+      "contributions": [
+        "code",
+        "doc",
+        "infra",
+        "test"
+      ]
+    }
+  ],
+  "repoType": "github"
+}
