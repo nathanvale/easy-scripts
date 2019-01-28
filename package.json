@@ -1,6 +1,6 @@
 {
   "name": "ndv-scripts",
-  "version": "0.0.0-semantically-released",
+  "version": "0.0.0-development",
   "description": "This is a CLI that abstracts away all configuration for my open source projects for linting, testing, building, and more",
   "homepage": "https://github.com/nathanvale/ndv-scripts#readme",
   "bugs": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nathanvale/ndv-scripts.git"
+    "url": "https://github.com/nathanvale/ndv-scripts.git"
   },
   "license": "MIT",
   "author": "Nathan Vale <hi@nathanvale.com>",
@@ -30,7 +30,8 @@
     "lint": "node src lint",
     "test": "node src test",
     "test:update": "node src test --updateSnapshot",
-    "validate": "node src validate"
+    "validate": "node src validate",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@babel/cli": "^7.2.0",
@@ -93,5 +94,8 @@
   "engines": {
     "node": ">= 8",
     "npm": ">= 5"
+  },
+  "devDependencies": {
+    "semantic-release": "^15.13.3"
   }
 }
