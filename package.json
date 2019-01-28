@@ -2,13 +2,13 @@
   "name": "ndv-scripts",
   "version": "0.0.0-semantically-released",
   "description": "This is a CLI that abstracts away all configuration for my open source projects for linting, testing, building, and more",
-  "homepage": "https://github.com/nathanvale/scripts#readme",
+  "homepage": "https://github.com/nathanvale/ndv-scripts#readme",
   "bugs": {
-    "url": "https://github.com/nathanvale/scripts/issues"
+    "url": "https://github.com/nathanvale/ndv-scripts/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nathanvale/scripts.git"
+    "url": "git+https://github.com/nathanvale/ndv-scripts.git"
   },
   "license": "MIT",
   "author": "Nathan Vale <hi@nathanvale.com>",
