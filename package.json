@@ -33,6 +33,10 @@
     "test:update": "node src test --updateSnapshot",
     "validate": "node src validate"
   },
+  "devDependencies": {
+    "jest-in-case": "^1.0.2",
+    "slash": "^2.0.0"
+  },
   "dependencies": {
     "@babel/cli": "^7.2.0",
     "@babel/core": "^7.2.0",
