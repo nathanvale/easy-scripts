@@ -5,5 +5,6 @@ module.exports = {
   lintStaged: require('./lintstagedrc'),
   prettier: require('./prettierrc'),
   commitlint: require('./commitlint.config'),
+  wallaby: require('./wallaby'),
   getRollupConfig: () => require('./rollup.config'),
 }
