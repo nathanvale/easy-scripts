@@ -5,7 +5,7 @@ const jestConfig = require('./jest.config')
 const babelrc = require('./babelrc')()
 
 const ignores = [
-  ...jestConfig.testMatch.map(file => `!${jestConfig.testMatch}`),
+  ...jestConfig.testMatch.map(file => `!${file}`),
   '!/node_modules/',
 ]
 const files = [
@@ -13,13 +13,9 @@ const files = [
   ...jestConfig.collectCoverageFrom,
   ...ignores,
 ]
-const tests = [
-  ...jestConfig.testMatch,
-  '!/node_modules/',
-  // TODO: raise an issue on wallaby js to find out why this isnt passing
-  '!./src/scripts/__tests__/format.js',
-]
+const tests = [...jestConfig.testMatch, '!/node_modules/']
 
+// eslint-disable-next-line func-names
 module.exports = function(wallaby) {
   const config = {
     debug: true,

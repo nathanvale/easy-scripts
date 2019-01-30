@@ -18,7 +18,8 @@
     "eslint.js",
     "config.js",
     "prettier.js",
-    "jest.js"
+    "jest.js",
+    "wallaby.js"
   ],
   "bin": {
     "scripts": "dist/index.js"
