@@ -1,36 +1,41 @@
 version: 2
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:8.10.0
 jobs:
-  test_node_6:
-    docker:
-      - image: circleci/node:6
+  test:
+    <<: *defaults
     steps:
-      # Configure your test steps here (checkout, npm install, cache management,
-      # tests etc...)
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
       - run:
-          name: Yarn version
+          name: Install
           command: |
-            yarn version
+            yarn install --frozen-lockfile
+      - run:
+          name: Run tests
+          command: |
+            yarn test
+      - run:
+          name: Build
+          command: |
+            yarn build
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
 
-  test_node_8:
-    docker:
-      - image: circleci/node:8
-    steps:
-      # Configure your test steps here (checkout, npm install, cache management,
-      # tests etc...)
-      - checkout
-      - run:
-          name: Yarn version
-          command: |
-            yarn version
   release:
-    docker:
-      - image: circleci/node:8
+    <<: *defaults
     steps:
-      - checkout
-      - run: npm install
-      # Run optional required steps before releasing
-      # - run: npm run build-script
       - run: npx semantic-release
 
 workflows:
@@ -38,9 +43,7 @@ workflows:
   test_and_release:
     # Run the test jobs first, then the release only when all the test jobs are successful
     jobs:
-      - test_node_6
-      - test_node_8
+      - test
       - release:
           requires:
-            - test_node_6
-            - test_node_8
+            - test
