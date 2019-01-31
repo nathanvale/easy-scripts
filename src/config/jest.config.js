@@ -3,7 +3,11 @@ const {ifAnyDep, hasFile, hasPkgProp, fromRoot} = require('../utils')
 
 const here = p => path.join(__dirname, p)
 
-const useBuiltInBabelConfig = !hasFile('.babelrc') && !hasPkgProp('babel')
+const useBuiltInBabelConfig =
+  !hasFile('.babelrc') &&
+  !hasFile('.babelrc.js') &&
+  !hasFile('.babel.config.js') &&
+  !hasPkgProp('babel')
 
 const ignores = [
   '/node_modules/',
