@@ -36,6 +36,7 @@ jobs:
   release:
     <<: *defaults
     steps:
+      - checkout
       - run: npx semantic-release
 
 workflows:
