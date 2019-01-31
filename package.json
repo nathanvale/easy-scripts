@@ -22,7 +22,7 @@
     "wallaby.js"
   ],
   "bin": {
-    "scripts": "dist/index.js"
+    "ndv-scripts": "dist/index.js"
   },
   "scripts": {
     "add-contributor": "node src contributors add",
