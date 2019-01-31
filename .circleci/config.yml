@@ -21,10 +21,6 @@ jobs:
           name: Run tests
           command: |
             yarn test
-      - run:
-          name: Build
-          command: |
-            yarn build
       - save_cache:
           paths:
             - node_modules
@@ -36,7 +32,13 @@ jobs:
   release:
     <<: *defaults
     steps:
+      - attach_workspace:
+          at: ~/repo
       - checkout
+      - run:
+          name: Build
+          command: |
+            yarn build
       - run: npx semantic-release
 
 workflows:
