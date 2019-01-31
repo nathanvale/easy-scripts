@@ -13,7 +13,7 @@ module.exports = {
     ],
     '**/*.+(js|json|less|css|ts|tsx|md)': [
       isOptedOut('autoformat', null, `${ndvScripts} format`),
-      `${ndvScripts} lint --fix`,
+      `${ndvScripts} lint`,
       `${ndvScripts} test --findRelatedTests --passWithNoTests`,
       isOptedOut('autoformat', null, 'git add'),
     ].filter(Boolean),
