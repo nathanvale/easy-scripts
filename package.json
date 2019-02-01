@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "author": "Nathan Vale <hi@nathanvale.com>",
-  "files": ["dist","config"],
+  "files": ["dist","config","config.js"],
   "bin": {
     "ndv-scripts": "dist/index.js"
   },
