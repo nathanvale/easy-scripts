@@ -33,6 +33,7 @@ Available Scripts:
   format
   lint
   pre-commit
+  precommit
   test
   validate
 

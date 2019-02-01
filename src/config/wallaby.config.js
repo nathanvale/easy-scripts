@@ -13,8 +13,8 @@ const files = [
   ...jestConfig.collectCoverageFrom,
   ...ignores,
 ]
-const tests = [...jestConfig.testMatch, '!/node_modules/']
 
+const tests = [...jestConfig.testMatch, '!/node_modules/']
 // eslint-disable-next-line func-names
 module.exports = function(wallaby) {
   const config = {

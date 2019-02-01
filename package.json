@@ -12,15 +12,7 @@
   },
   "license": "MIT",
   "author": "Nathan Vale <hi@nathanvale.com>",
-  "files": [
-    "dist",
-    "babel.js",
-    "eslint.js",
-    "config.js",
-    "prettier.js",
-    "jest.js",
-    "wallaby.js"
-  ],
+  "files": ["dist","config"],
   "bin": {
     "ndv-scripts": "dist/index.js"
   },

@@ -1,4 +1,4 @@
-module.exports = ()=>({
+module.exports = () => ({
   transform: {
     '^.+\\.(ts|tsx|js)$': 'babel-jest',
   },
@@ -8,9 +8,8 @@ module.exports = ()=>({
   testMatch: ['<rootDir>/src/**/?(*.)spec.ts?(x)'],
   setupTestFrameworkScriptFile: '<rootDir>../../jest.setup.js',
   moduleFileExtensions: ['js', 'json', 'node', 'ts', 'tsx'],
-  globals: { ['__DEV__']: true },
+  globals: {__DEV__: true},
   moduleNameMapper: {
-    '^@form-foundations/([a-zA-Z0-9_-]+)$':
-      process.cwd() + '/packages/$1/src/index.ts',
+    '^@form-foundations/([a-zA-Z0-9_-]+)$': `${process.cwd()} + '/packages/$1/src/index.ts`,
   },
-});
+})
