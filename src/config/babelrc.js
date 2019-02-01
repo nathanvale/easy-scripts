@@ -12,6 +12,7 @@ const isCJS = BUILD_FORMAT === 'cjs'
 const isWebpack = parseEnv('BUILD_WEBPACK', false)
 const treeshake = parseEnv('BUILD_TREESHAKE', isRollup || isWebpack)
 const alias = parseEnv('BUILD_ALIAS', isPreact ? {react: 'preact'} : null)
+const isMonorepo = pkg.workspaces
 
 const hasBabelRuntimeDep = Boolean(
   pkg.dependencies && pkg.dependencies['@babel/runtime'],
@@ -19,9 +20,9 @@ const hasBabelRuntimeDep = Boolean(
 const RUNTIME_HELPERS_WARN =
   'You should add @babel/runtime as dependency to your package. It will allow reusing so-called babel helpers from npm rather than bundling their copies into your files.'
 
-if (!treeshake && !hasBabelRuntimeDep) {
+if (!isMonorepo && !treeshake && !hasBabelRuntimeDep) {
   throw new Error(RUNTIME_HELPERS_WARN)
-} else if (treeshake && !isUMD && !hasBabelRuntimeDep) {
+} else if (treeshake && !isMonorepo && !isUMD && !hasBabelRuntimeDep) {
   console.warn(RUNTIME_HELPERS_WARN)
 }
 
