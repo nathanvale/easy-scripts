@@ -1,3 +1,4 @@
+// wallaby rocks
 // eslint-disable-next-line no-unused-vars
 module.exports = ({scope = '', name = 'My monorepo'} = {}) => wallaby => {
   // eslint-disable-next-line no-shadow
