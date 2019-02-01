@@ -1,5 +1,6 @@
-module.exports = wallaby => ({
-  name: 'Origin React',
+// eslint-disable-next-line no-unused-vars
+module.exports = ({scope = '', name = 'My monorepo'} = {}) => wallaby => ({
+  name,
   env: {
     type: 'node',
     runner: 'node',
@@ -34,7 +35,10 @@ module.exports = wallaby => ({
       // eslint-disable-next-line no-multi-assign
       jestConfig = global._modifiedJestConfig = require('./jest.config.js')
       jestConfig.moduleNameMapper = {
-        '^@form-foundations/([a-zA-Z0-9_-]+)$': `${process.cwd()}/packages/$1/src/index.js`,
+        [`^${
+          // eslint-disable-next-line babel/no-invalid-this
+          this.scope
+        }/([a-zA-Z0-9_-]+)$`]: `${process.cwd()}/packages/$1/src/index.js`,
       }
       jestConfig.setupTestFrameworkScriptFile = './jest.setup.js'
     }
