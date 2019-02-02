@@ -2,18 +2,6 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = ({scope = '', name = 'My monorepo'} = {}) => wallaby => {
   // eslint-disable-next-line no-shadow
-  const setup = wallaby => {
-    let jestConfig = global._modifiedJestConfig
-    if (!jestConfig) {
-      // eslint-disable-next-line no-multi-assign
-      jestConfig = global._modifiedJestConfig = require('./jest.config.js')
-      jestConfig.moduleNameMapper = {
-        [`^${scope}/([a-zA-Z0-9_-]+)$`]: `${process.cwd()}/packages/$1/src/index.js`,
-      }
-      jestConfig.setupTestFrameworkScriptFile = './jest.setup.js'
-    }
-    wallaby.testFramework.configure(jestConfig)
-  }
 
   return {
     name,
@@ -43,6 +31,20 @@ module.exports = ({scope = '', name = 'My monorepo'} = {}) => wallaby => {
       }),
     },
     tests: ['packages/*/src/**/*.spec.{ts,tsx}'],
-    setup,
+    // eslint-disable-next-line no-shadow
+    setup: wallaby => {
+      let jestConfig = global._modifiedJestConfig
+      if (!jestConfig) {
+        // eslint-disable-next-line no-multi-assign
+        jestConfig = global._modifiedJestConfig = require('./jest.config.js')
+        jestConfig.moduleNameMapper = {
+          [`^${
+            ['this'].scope
+          }/([a-zA-Z0-9_-]+)$`]: `${process.cwd()}/packages/$1/src/index.js`,
+        }
+        jestConfig.setupTestFrameworkScriptFile = './jest.setup.js'
+      }
+      wallaby.testFramework.configure(jestConfig)
+    },
   }
 }
