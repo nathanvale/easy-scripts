@@ -4,17 +4,15 @@ process.env.NODE_ENV = 'test'
 const jestConfig = require('./jest.config')
 const babelrc = require('./babelrc')()
 
-const ignores = [
-  ...jestConfig.testMatch.map(file => `!${file}`),
-  '!/node_modules/',
-]
 const files = [
   './src/config/jest.configs',
   ...jestConfig.collectCoverageFrom,
-  ...ignores,
+  ...jestConfig.testMatch.map(file => `!${file}`),
+  '!dist',
+  '!node_modules',
 ]
 
-const tests = [...jestConfig.testMatch, '!/node_modules/']
+const tests = [...jestConfig.testMatch, '!node_modules', '!dist']
 // eslint-disable-next-line func-names
 module.exports = function(wallaby) {
   const config = {
