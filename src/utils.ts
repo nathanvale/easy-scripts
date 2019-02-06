@@ -1,16 +1,17 @@
-const fs = require('fs')
-const path = require('path')
-const rimraf = require('rimraf')
-const mkdirp = require('mkdirp')
-const arrify = require('arrify')
-const has = require('lodash.has')
-const readPkgUp = require('read-pkg-up')
-const which = require('which')
+import arrify from 'arrify'
+import fs from 'fs'
+import {has} from 'lodash'
+import mkdirp from 'mkdirp'
+import path from 'path'
+import readPkgUp from 'read-pkg-up'
+import rimraf from 'rimraf'
+import which from 'which'
 
 const {pkg, path: pkgPath} = readPkgUp.sync({
   cwd: fs.realpathSync(process.cwd()),
 })
 const appDirectory = path.dirname(pkgPath)
+console.log('appDirectory', appDirectory)
 
 function resolveNdvScripts() {
   if (pkg.name === 'ndv-scripts') {
@@ -20,7 +21,10 @@ function resolveNdvScripts() {
 }
 
 // eslint-disable-next-line complexity
-function resolveBin(modName, {executable = modName, cwd = process.cwd()} = {}) {
+function resolveBin(
+  modName: string,
+  {executable = modName, cwd = process.cwd()} = {},
+) {
   let pathFromWhich
   try {
     pathFromWhich = fs.realpathSync(which.sync(executable))
@@ -45,35 +49,38 @@ function resolveBin(modName, {executable = modName, cwd = process.cwd()} = {}) {
   }
 }
 
-const fromRoot = (...p) => path.join(appDirectory, ...p)
-const hasFile = (...p) => fs.existsSync(fromRoot(...p))
-const ifFile = (files, t, f) =>
-  arrify(files).some(file => hasFile(file)) ? t : f
+const fromRoot = (p: string, ...rest: string[]) => path.join(appDirectory, ...p)
+const hasFile = (p: string, ...rest: string[]) => fs.existsSync(fromRoot(p))
+const ifFile = (files: string[], t?: any, f?: any): boolean =>
+  arrify<string>(files).some(file => hasFile(file)) ? t : f
 
-const hasPkgProp = props => arrify(props).some(prop => has(pkg, prop))
+const hasPkgProp = (props: any) =>
+  arrify<string>(props).some(prop => has(pkg, prop))
 
-const hasPkgSubProp = pkgProp => props =>
-  hasPkgProp(arrify(props).map(p => `${pkgProp}.${p}`))
+const hasPkgSubProp = (pkgProp: string) => (props: any) =>
+  hasPkgProp(arrify<string>(props).map(p => `${pkgProp}.${p}`))
 
-const ifPkgSubProp = pkgProp => (props, t, f) =>
+const ifPkgSubProp = (pkgProp: string) => (props: any, t?: any, f?: any) =>
   hasPkgSubProp(pkgProp)(props) ? t : f
 
 const hasScript = hasPkgSubProp('scripts')
 const hasPeerDep = hasPkgSubProp('peerDependencies')
 const hasDep = hasPkgSubProp('dependencies')
 const hasDevDep = hasPkgSubProp('devDependencies')
-const hasAnyDep = args => [hasDep, hasDevDep, hasPeerDep].some(fn => fn(args))
+const hasAnyDep = (args: string[]) =>
+  [hasDep, hasDevDep, hasPeerDep].some(fn => fn(args))
 
 const ifPeerDep = ifPkgSubProp('peerDependencies')
 const ifDep = ifPkgSubProp('dependencies')
 const ifDevDep = ifPkgSubProp('devDependencies')
-const ifAnyDep = (deps, t, f) => (hasAnyDep(arrify(deps)) ? t : f)
+const ifAnyDep = (deps: string[], t?: any, f?: any) =>
+  hasAnyDep(arrify<string>(deps)) ? t : f
 const ifScript = ifPkgSubProp('scripts')
 
-function parseEnv(name, def) {
+function parseEnv(name: string, def: any): any {
   if (envIsSet(name)) {
     try {
-      return JSON.parse(process.env[name])
+      return JSON.parse(process.env[name] as string)
     } catch (err) {
       return process.env[name]
     }
@@ -81,7 +88,7 @@ function parseEnv(name, def) {
   return def
 }
 
-function envIsSet(name) {
+function envIsSet(name: string) {
   return (
     process.env.hasOwnProperty(name) &&
     process.env[name] &&
@@ -89,7 +96,10 @@ function envIsSet(name) {
   )
 }
 
-function getConcurrentlyArgs(scripts, {killOthers = true} = {}) {
+function getConcurrentlyArgs(
+  scripts: {[key: string]: string},
+  {killOthers = true} = {},
+) {
   const colors = [
     'bgBlue',
     'bgGreen',
@@ -100,15 +110,18 @@ function getConcurrentlyArgs(scripts, {killOthers = true} = {}) {
     'bgBlack',
     'bgYellow',
   ]
-  scripts = Object.entries(scripts).reduce((all, [name, script]) => {
-    if (script) {
-      all[name] = script
-    }
-    return all
-  }, {})
+  scripts = Object.entries(scripts).reduce(
+    (all: {[key: string]: string}, [name, script]) => {
+      if (script) {
+        all[name] = script
+      }
+      return all
+    },
+    {},
+  )
   const prefixColors = Object.keys(scripts)
     .reduce(
-      (pColors, _s, i) =>
+      (pColors: string[], _s, i) =>
         pColors.concat([`${colors[i % colors.length]}.bold.reset`]),
       [],
     )
@@ -124,7 +137,7 @@ function getConcurrentlyArgs(scripts, {killOthers = true} = {}) {
   ].filter(Boolean)
 }
 
-function isOptedOut(key, t = true, f = false) {
+function isOptedOut(key: string, t: any = true, f: any = false) {
   if (!fs.existsSync(fromRoot('.opt-out'))) {
     return f
   }
@@ -132,7 +145,7 @@ function isOptedOut(key, t = true, f = false) {
   return contents.includes(key) ? t : f
 }
 
-function isOptedIn(key, t = true, f = false) {
+function isOptedIn(key: string, t = true, f = false) {
   if (!fs.existsSync(fromRoot('.opt-in'))) {
     return f
   }
@@ -140,11 +153,15 @@ function isOptedIn(key, t = true, f = false) {
   return contents.includes(key) ? t : f
 }
 
-function uniq(arr) {
+function uniq(arr: []) {
   return Array.from(new Set(arr))
 }
 
-function writeExtraEntry(name, {cjs, esm}, clean = true) {
+function writeExtraEntry(
+  name: string,
+  {cjs, esm}: {cjs: string; esm: string},
+  clean = true,
+) {
   if (clean) {
     rimraf.sync(fromRoot(name))
   }
@@ -167,7 +184,7 @@ function writeExtraEntry(name, {cjs, esm}, clean = true) {
   )
 }
 
-module.exports = {
+export {
   appDirectory,
   envIsSet,
   fromRoot,

@@ -1,4 +1,7 @@
-#!/usr/bin/env node
+require('@babel/register')({
+  extensions: ['.ts'],
+})
+
 let shouldThrow
 try {
   shouldThrow =
@@ -15,4 +18,4 @@ if (shouldThrow) {
   )
 }
 
-require('./run-script')
+require('./run-script.ts')

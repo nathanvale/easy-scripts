@@ -1,16 +1,15 @@
-const path = require('path')
-const glob = require('glob')
-const camelcase = require('lodash.camelcase')
-const rollupBabel = require('rollup-plugin-babel')
-const commonjs = require('rollup-plugin-commonjs')
-const nodeResolve = require('rollup-plugin-node-resolve')
-const json = require('rollup-plugin-json')
-const replace = require('rollup-plugin-replace')
-const {terser} = require('rollup-plugin-terser')
-const nodeBuiltIns = require('rollup-plugin-node-builtins')
-const nodeGlobals = require('rollup-plugin-node-globals')
-const {sizeSnapshot} = require('rollup-plugin-size-snapshot')
-const omit = require('lodash.omit')
+import path from 'path'
+import glob from 'glob'
+import {camelCase, omit} from 'lodash'
+import rollupBabel from 'rollup-plugin-babel'
+import commonjs from 'rollup-plugin-commonjs'
+import nodeResolve from 'rollup-plugin-node-resolve'
+import json from 'rollup-plugin-json'
+import replace from 'rollup-plugin-replace'
+import {terser} from 'rollup-plugin-terser'
+import nodeBuiltIns from 'rollup-plugin-node-builtins'
+import nodeGlobals from 'rollup-plugin-node-globals'
+import {sizeSnapshot} from 'rollup-plugin-size-snapshot'
 const {
   pkg,
   hasFile,
@@ -20,7 +19,7 @@ const {
   fromRoot,
   uniq,
   writeExtraEntry,
-} = require('../utils')
+} from '../utils'
 
 const here = p => path.join(__dirname, p)
 const capitalize = s => s[0].toUpperCase() + s.slice(1)
@@ -29,7 +28,7 @@ const minify = parseEnv('BUILD_MINIFY', false)
 const format = process.env.BUILD_FORMAT
 const isPreact = parseEnv('BUILD_PREACT', false)
 const isNode = parseEnv('BUILD_NODE', false)
-const name = process.env.BUILD_NAME || capitalize(camelcase(pkg.name))
+const name = process.env.BUILD_NAME || capitalize(camelCase(pkg.name))
 const useSizeSnapshot = parseEnv('BUILD_SIZE_SNAPSHOT', false)
 
 const esm = format === 'esm'
@@ -37,7 +36,7 @@ const umd = format === 'umd'
 
 const defaultGlobals = Object.keys(pkg.peerDependencies || {}).reduce(
   (deps, dep) => {
-    deps[dep] = capitalize(camelcase(dep))
+    deps[dep] = capitalize(camelCase(dep))
     return deps
   },
   {},

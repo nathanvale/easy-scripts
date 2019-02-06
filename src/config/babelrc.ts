@@ -1,7 +1,7 @@
-const browserslist = require('browserslist')
-const semver = require('semver')
+import browserslist from 'browserslist'
+import semver from 'semver'
 
-const {ifAnyDep, parseEnv, appDirectory, pkg} = require('../utils')
+import {ifAnyDep, parseEnv, appDirectory, pkg} from '../utils'
 
 const {BABEL_ENV, NODE_ENV, BUILD_FORMAT} = process.env
 const isTest = (BABEL_ENV || NODE_ENV) === 'test'
@@ -11,7 +11,7 @@ const isUMD = BUILD_FORMAT === 'umd'
 const isCJS = BUILD_FORMAT === 'cjs'
 const isWebpack = parseEnv('BUILD_WEBPACK', false)
 const treeshake = parseEnv('BUILD_TREESHAKE', isRollup || isWebpack)
-const alias = parseEnv('BUILD_ALIAS', isPreact ? {react: 'preact'} : null)
+const alias = parseEnv('BUILD_ALIAS', isPreact ? {react: 'preact'} : undefined)
 const isMonorepo = pkg.workspaces
 
 const hasBabelRuntimeDep = Boolean(
@@ -28,7 +28,7 @@ if (!isMonorepo && !treeshake && !hasBabelRuntimeDep) {
 
 /**
  * use the strategy declared by browserslist to load browsers configuration.
- * fallback to the default if don't found custom configuration
+ * fallback to the default if we don't find the custom configuration
  * @see https://github.com/browserslist/browserslist/blob/master/node.js#L139
  */
 const browsersConfig = browserslist.loadConfig({path: appDirectory}) || [

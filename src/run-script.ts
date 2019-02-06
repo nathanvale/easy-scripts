@@ -1,6 +1,6 @@
-const path = require('path')
-const spawn = require('cross-spawn')
-const glob = require('glob')
+import spawn from 'cross-spawn'
+import glob from 'glob'
+import path from 'path'
 
 const [executor, ignoredBin, script, ...args] = process.argv
 

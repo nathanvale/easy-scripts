@@ -1,9 +1,13 @@
+require('@babel/register')({
+  extensions: ['.ts'],
+})
+
 if (process.argv.includes('--browser')) {
   console.error('--browser has been deprecated, use --bundle instead')
 }
 
 if (process.argv.includes('--bundle') || process.argv.includes('--browser')) {
-  require('./rollup')
+  require('./rollup.ts')
 } else {
-  require('./babel')
+  require('./babel.ts')
 }
