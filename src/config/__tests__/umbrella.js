@@ -4,7 +4,7 @@ test('requiring some files does not blow up', () => {
   require('../eslintrc')
   require('../jest.config')
   require('../lintstagedrc')
-  require('../prettierrc')
+  require('../prettier.config')
   require('../rollup.config')
   require('../').getRollupConfig()
 })
