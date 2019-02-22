@@ -11,16 +11,20 @@ const nodeBuiltIns = require('rollup-plugin-node-builtins')
 const nodeGlobals = require('rollup-plugin-node-globals')
 const {sizeSnapshot} = require('rollup-plugin-size-snapshot')
 const omit = require('lodash.omit')
+const {packageManager} = require('../jsonate')
+
+const {getState: getPkgState, hasProp: hasPkgProp} = packageManager()
+
 const {
-  pkg,
   hasFile,
-  hasPkgProp,
   parseEnv,
   ifFile,
   fromRoot,
   uniq,
   writeExtraEntry,
 } = require('../utils')
+
+const pkg = getPkgState().config
 
 const here = p => path.join(__dirname, p)
 const capitalize = s => s[0].toUpperCase() + s.slice(1)

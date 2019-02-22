@@ -63,3 +63,14 @@ cases(
     },
   },
 )
+
+test('should exit if lintstaged fails ', () => {
+  const {sync: crossSpawnSyncMock} = require('cross-spawn')
+  const originalExit = process.exit
+  const status = {status: 1}
+  crossSpawnSyncMock.mockReturnValueOnce(status)
+  process.exit = jest.fn()
+  require('../pre-commit')
+  expect(process.exit).toBeCalledWith(1)
+  process.exit = originalExit
+})

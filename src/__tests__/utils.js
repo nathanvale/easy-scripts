@@ -1,20 +1,12 @@
-jest.mock('read-pkg-up', () => ({
-  sync: jest.fn(() => ({pkg: {}, path: '/blah/package.json'})),
-}))
+jest.mock('../jsonate')
 jest.mock('which', () => ({sync: jest.fn(() => {})}))
 
-let whichSyncMock, readPkgUpSyncMock
+let jsonateMock, whichSyncMock
 
 beforeEach(() => {
   jest.resetModules()
+  jsonateMock = require('../jsonate')
   whichSyncMock = require('which').sync
-  readPkgUpSyncMock = require('read-pkg-up').sync
-})
-
-test('pkg is the package.json', () => {
-  const myPkg = {name: 'blah'}
-  mockPkg({pkg: myPkg})
-  expect(require('../utils').pkg).toBe(myPkg)
 })
 
 test('appDirectory is the dirname to the package.json', () => {
@@ -30,6 +22,7 @@ test('resolveNdvScripts resolves to src/index.js when in the ndv-scripts package
   )
 })
 
+//TODO: WORKS IN JEST - raise a pull request with wallaby as to why this doesn't work???
 test('resolveNdvScripts resolves to ndv-scripts if not in the ndv-scripts package', () => {
   mockPkg({pkg: {name: 'not-ndv-scripts'}})
   whichSyncMock.mockImplementationOnce(() => require.resolve('../'))
@@ -86,38 +79,9 @@ test(`parseEnv returns the default if the environment variable doesn't exist`, (
   )
 })
 
-test('ifAnyDep returns the true argument if true and false argument if false', () => {
-  mockPkg({pkg: {peerDependencies: {react: '*'}}})
-  const t = {a: 'b'}
-  const f = {c: 'd'}
-  expect(require('../utils').ifAnyDep('react', t, f)).toBe(t)
-  expect(require('../utils').ifAnyDep('preact', t, f)).toBe(f)
-})
-
-test('ifAnyDep works with arrays of dependencies', () => {
-  mockPkg({pkg: {peerDependencies: {react: '*'}}})
-  const t = {a: 'b'}
-  const f = {c: 'd'}
-  expect(require('../utils').ifAnyDep(['preact', 'react'], t, f)).toBe(t)
-  expect(require('../utils').ifAnyDep(['preact', 'webpack'], t, f)).toBe(f)
-})
-
-test('ifScript returns the true argument if true and the false argument if false', () => {
-  mockPkg({pkg: {scripts: {build: 'echo build'}}})
-  const t = {e: 'f'}
-  const f = {g: 'h'}
-  expect(require('../utils').ifScript('build', t, f)).toBe(t)
-  expect(require('../utils').ifScript('lint', t, f)).toBe(f)
-})
-
-test('ifFile returns the true argument if true and the false argument if false', () => {
-  mockPkg({path: require.resolve('../../package.json')})
-  const t = {e: 'f'}
-  const f = {g: 'h'}
-  expect(require('../utils').ifFile('package.json', t, f)).toBe(t)
-  expect(require('../utils').ifFile('does-not-exist.blah', t, f)).toBe(f)
-})
-
 function mockPkg({pkg = {}, path = '/blah/package.json'}) {
-  readPkgUpSyncMock.mockImplementationOnce(() => ({pkg, path}))
+  jsonateMock.packageManager().getState.mockImplementation(() => ({
+    config: pkg,
+    configPath: path,
+  }))
 }

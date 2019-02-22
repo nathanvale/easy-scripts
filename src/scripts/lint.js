@@ -1,8 +1,10 @@
 const path = require('path')
 const spawn = require('cross-spawn')
 const yargsParser = require('yargs-parser')
-const {hasPkgProp, resolveBin, hasFile} = require('../utils')
+const {resolveBin, hasFile} = require('../utils')
+const {packageManager} = require('../jsonate')
 
+const {hasProp: hasPkgProp} = packageManager()
 let args = process.argv.slice(2)
 const here = p => path.join(__dirname, p)
 const hereRelative = p => here(p).replace(process.cwd(), '.')

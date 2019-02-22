@@ -7,6 +7,7 @@ module.exports = {
   jestMonorepo: require('./jest.monorepo.config'),
   lintStaged: require('./lintstagedrc'),
   prettier: require('./prettier.config.js'),
+  typescript: require('./tsconfig.json'),
   wallaby: require('./wallaby.config'),
   wallabyMonorepo: require('./wallaby.monorepo.config'),
 }

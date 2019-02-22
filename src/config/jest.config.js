@@ -1,5 +1,8 @@
 const path = require('path')
-const {ifAnyDep, hasFile, hasPkgProp, fromRoot} = require('../utils')
+const {hasFile, fromRoot} = require('../utils')
+const {packageManager} = require('../jsonate')
+
+const {ifAnyDep, hasProp: hasPkgProp} = packageManager()
 
 const here = p => path.join(__dirname, p)
 

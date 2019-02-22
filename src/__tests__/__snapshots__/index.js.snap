@@ -28,13 +28,15 @@ Usage: ../ [script] [--flags]
 
 Available Scripts:
   build
+  build-types
   commitlint
   contributors
   format
   lint
   pre-commit
-  precommit
   test
+  type-check-watch
+  type-check
   validate
 
 Options:

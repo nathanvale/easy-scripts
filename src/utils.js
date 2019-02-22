@@ -1,19 +1,19 @@
+//TODO: imporve test converage
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 const fs = require('fs')
 const path = require('path')
-const rimraf = require('rimraf')
 const mkdirp = require('mkdirp')
-const arrify = require('arrify')
-const has = require('lodash.has')
-const readPkgUp = require('read-pkg-up')
+const rimraf = require('rimraf')
 const which = require('which')
+const arrify = require('arrify')
+const {packageManager} = require('./jsonate')
 
-const {pkg, path: pkgPath} = readPkgUp.sync({
-  cwd: fs.realpathSync(process.cwd()),
-})
-const appDirectory = path.dirname(pkgPath)
+const {getState: getPkgState, hasProp: hasPkgProp} = packageManager()
+const appDirectory = path.dirname(getPkgState().configPath)
 
 function resolveNdvScripts() {
-  if (pkg.name === 'ndv-scripts') {
+  if (getPkgState().config.name === 'ndv-scripts') {
     return require.resolve('./').replace(process.cwd(), '.')
   }
   return resolveBin('ndv-scripts')
@@ -49,26 +49,6 @@ const fromRoot = (...p) => path.join(appDirectory, ...p)
 const hasFile = (...p) => fs.existsSync(fromRoot(...p))
 const ifFile = (files, t, f) =>
   arrify(files).some(file => hasFile(file)) ? t : f
-
-const hasPkgProp = props => arrify(props).some(prop => has(pkg, prop))
-
-const hasPkgSubProp = pkgProp => props =>
-  hasPkgProp(arrify(props).map(p => `${pkgProp}.${p}`))
-
-const ifPkgSubProp = pkgProp => (props, t, f) =>
-  hasPkgSubProp(pkgProp)(props) ? t : f
-
-const hasScript = hasPkgSubProp('scripts')
-const hasPeerDep = hasPkgSubProp('peerDependencies')
-const hasDep = hasPkgSubProp('dependencies')
-const hasDevDep = hasPkgSubProp('devDependencies')
-const hasAnyDep = args => [hasDep, hasDevDep, hasPeerDep].some(fn => fn(args))
-
-const ifPeerDep = ifPkgSubProp('peerDependencies')
-const ifDep = ifPkgSubProp('dependencies')
-const ifDevDep = ifPkgSubProp('devDependencies')
-const ifAnyDep = (deps, t, f) => (hasAnyDep(arrify(deps)) ? t : f)
-const ifScript = ifPkgSubProp('scripts')
 
 function parseEnv(name, def) {
   if (envIsSet(name)) {
@@ -167,26 +147,71 @@ function writeExtraEntry(name, {cjs, esm}, clean = true) {
   )
 }
 
+//TODO: should this throw an error?
+function createConfig(p, c) {
+  fs.writeFileSync(p, c, err => {
+    if (err) {
+      console.log(err)
+    }
+    console.log('The file was saved!')
+  })
+}
+
+function execCmd(command, options = {}, silent = true) {
+  if (!silent) {
+    //TODO: use print to colwidth here .... DONE
+    console.log(command)
+  }
+  return exec(command, options)
+    .then(response => response.stdout)
+    .catch(error => {
+      if (error.stderr === '') return error.stdout
+      throw error
+    })
+}
+
+function wait(timeout) {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(), timeout)
+  })
+}
+
+function print(message) {
+  console.info(message)
+}
+
+function useBuiltInBabelConfig(args) {
+  return (
+    !args.includes('--presets') &&
+    !hasFile('.babelrc') &&
+    !hasFile('.babelrc.js') &&
+    !hasFile('babel.config.js') &&
+    !hasPkgProp('babel')
+  )
+}
+
+function fromConfigs(p) {
+  return path.join(fromRoot('src/config'), p)
+}
+
 module.exports = {
   appDirectory,
+  createConfig,
   envIsSet,
+  execCmd,
   fromRoot,
+  fromConfigs,
   getConcurrentlyArgs,
   hasFile,
-  hasPkgProp,
-  hasScript,
-  ifAnyDep,
-  ifDep,
-  ifDevDep,
   ifFile,
-  ifPeerDep,
-  ifScript,
   isOptedIn,
   isOptedOut,
   parseEnv,
-  pkg,
+  print,
   resolveBin,
   resolveNdvScripts,
   uniq,
+  useBuiltInBabelConfig,
+  wait,
   writeExtraEntry,
 }

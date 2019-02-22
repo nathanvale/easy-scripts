@@ -1,34 +1,36 @@
 const browserslist = require('browserslist')
 const semver = require('semver')
-
-const {ifAnyDep, parseEnv, appDirectory, pkg} = require('../utils')
+const {packageManager} = require('../jsonate')
+const {parseEnv, appDirectory} = require('../utils')
 
 const {BABEL_ENV, NODE_ENV, BUILD_FORMAT} = process.env
-const isTest = (BABEL_ENV || NODE_ENV) === 'test'
+const {ifAnyDep, getState: getPkgState} = packageManager()
 const isPreact = parseEnv('BUILD_PREACT', false)
-const isRollup = parseEnv('BUILD_ROLLUP', false)
-const isUMD = BUILD_FORMAT === 'umd'
-const isCJS = BUILD_FORMAT === 'cjs'
-const isWebpack = parseEnv('BUILD_WEBPACK', false)
-const treeshake = parseEnv('BUILD_TREESHAKE', isRollup || isWebpack)
 const alias = parseEnv('BUILD_ALIAS', isPreact ? {react: 'preact'} : null)
-const isMonorepo = pkg.workspaces
-
+const pkg = getPkgState().config
 const hasBabelRuntimeDep = Boolean(
   pkg.dependencies && pkg.dependencies['@babel/runtime'],
 )
+const isCJS = BUILD_FORMAT === 'cjs'
+const isMonorepo = pkg.workspaces
+const isRollup = parseEnv('BUILD_ROLLUP', false)
+const isTest = (BABEL_ENV || NODE_ENV) === 'test'
+const isUMD = BUILD_FORMAT === 'umd'
+const isWebpack = parseEnv('BUILD_WEBPACK', false)
 const RUNTIME_HELPERS_WARN =
   'You should add @babel/runtime as dependency to your package. It will allow reusing so-called babel helpers from npm rather than bundling their copies into your files.'
+const treeshake = parseEnv('BUILD_TREESHAKE', isRollup || isWebpack)
 
 if (!isMonorepo && !treeshake && !hasBabelRuntimeDep) {
   throw new Error(RUNTIME_HELPERS_WARN)
+  //TODO: offer to install it
 } else if (treeshake && !isMonorepo && !isUMD && !hasBabelRuntimeDep) {
   console.warn(RUNTIME_HELPERS_WARN)
 }
 
 /**
  * use the strategy declared by browserslist to load browsers configuration.
- * fallback to the default if don't found custom configuration
+ * fallback to the default if don't find a custom configuration
  * @see https://github.com/browserslist/browserslist/blob/master/node.js#L139
  */
 const browsersConfig = browserslist.loadConfig({path: appDirectory}) || [
@@ -54,6 +56,7 @@ module.exports = () => ({
       ],
     ),
     ifAnyDep(['flow-bin'], [require.resolve('@babel/preset-flow')]),
+    ifAnyDep(['typescript'], [require.resolve('@babel/preset-typescript')]),
   ].filter(Boolean),
   plugins: [
     [
