@@ -1,5 +1,6 @@
-const {ifAnyDep} = require('../utils')
+const {packageManager} = require('../jsonate')
 
+const {ifAnyDep} = packageManager()
 module.exports = {
   extends: [
     require.resolve('eslint-config-ndv'),

@@ -1,10 +1,8 @@
 const spawn = require('cross-spawn')
-const {
-  parseEnv,
-  resolveBin,
-  ifScript,
-  getConcurrentlyArgs,
-} = require('../utils')
+const {parseEnv, resolveBin, getConcurrentlyArgs} = require('../utils')
+const {packageManager} = require('../jsonate')
+
+const {ifScript} = packageManager()
 
 // pre-commit runs linting and tests on the relevant files
 // so those scripts don't need to be run if we're running

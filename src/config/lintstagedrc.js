@@ -2,7 +2,7 @@ const {resolveNdvScripts, resolveBin, isOptedOut} = require('../utils')
 
 const ndvScripts = resolveNdvScripts()
 const doctoc = resolveBin('doctoc')
-
+//TODO:: support https://www.npmjs.com/package/prettier-package-json
 module.exports = {
   concurrent: false,
   linters: {
