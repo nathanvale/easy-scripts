@@ -11,6 +11,7 @@ const {
 function build() {
   const args = process.argv.slice(2)
   const useBuiltinConfig = useBuiltInBabelConfig(args)
+
   const config = useBuiltinConfig
     ? ['--presets', fromConfigs('babelrc.js')]
     : []

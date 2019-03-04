@@ -17,6 +17,7 @@ cases(
       // tests
       require('../validate')
       expect(crossSpawnSyncMock).toHaveBeenCalledTimes(1)
+      // eslint-disable-next-line no-useless-catch
     } catch (error) {
       throw error
     } finally {

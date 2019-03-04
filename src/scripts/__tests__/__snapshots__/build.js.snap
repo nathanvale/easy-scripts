@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`build with a babel error should throw an error 2`] = `babel --out-dir dist --copy-files --ignore __tests__,__mocks__ src`;
+
 exports[`build with babel should compile files to a specified --out-dir 1`] = `babel --copy-files --ignore __tests__,__mocks__ src --out-dir`;
 
 exports[`build with babel should compile files with --presets when using a built in config 1`] = `babel --out-dir dist --presets ~/src/config/babelrc.js --copy-files --ignore __tests__,__mocks__ src`;

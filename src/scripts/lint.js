@@ -1,51 +1,65 @@
-const path = require('path')
 const spawn = require('cross-spawn')
 const yargsParser = require('yargs-parser')
-const {resolveBin, hasFile} = require('../utils')
-const {packageManager} = require('../jsonate')
+const {
+  resolveBin,
+  fromConfigs,
+  useBuiltInEslintConfig,
+  useBuiltInEslintIgnore,
+} = require('../utils')
 
-const {hasProp: hasPkgProp} = packageManager()
-let args = process.argv.slice(2)
-const here = p => path.join(__dirname, p)
-const hereRelative = p => here(p).replace(process.cwd(), '.')
-const parsedArgs = yargsParser(args)
+async function lint() {
+  try {
+    await Promise.resolve()
+    // await verifyEslint()
+    let args = process.argv.slice(2)
+    const parsedArgs = yargsParser(args)
 
-const useBuiltinConfig =
-  !args.includes('--config') &&
-  !hasFile('.eslintrc') &&
-  !hasFile('.eslintrc.js') &&
-  !hasPkgProp('eslintConfig')
+    const useBuiltinConfig = useBuiltInEslintConfig(args)
 
-const config = useBuiltinConfig
-  ? ['--config', hereRelative('../config/eslintrc.js')]
-  : []
+    const useSpecifiedExtensions = args.includes('--ext')
+    if (!useSpecifiedExtensions) {
+      const extensions = ['.js', '.jsx', '.ts', '.tsx']
+      args = [...args, '--ext', extensions.join(',')]
+    }
 
-const useBuiltinIgnore =
-  !args.includes('--ignore-path') &&
-  !hasFile('.eslintignore') &&
-  !hasPkgProp('eslintIgnore')
+    const config = useBuiltinConfig
+      ? ['--config', fromConfigs('eslintrc.js')]
+      : []
 
-const ignore = useBuiltinIgnore
-  ? ['--ignore-path', hereRelative('../config/eslintignore')]
-  : []
+    const useBuiltinIgnore = useBuiltInEslintIgnore(args)
 
-const cache = args.includes('--no-cache') ? [] : ['--cache']
+    const ignore = useBuiltinIgnore
+      ? ['--ignore-path', fromConfigs('eslintignore')]
+      : []
 
-const filesGiven = parsedArgs._.length > 0
+    const cache = args.includes('--no-cache') ? [] : ['--cache']
 
-const filesToApply = filesGiven ? [] : ['.']
+    const filesGiven = parsedArgs._.length > 0
 
-if (filesGiven) {
-  // we need to take all the flag-less arguments (the files that should be linted)
-  // and filter out the ones that aren't js files. Otherwise json or css files
-  // may be passed through
-  args = args.filter(a => !parsedArgs._.includes(a) || a.endsWith('.js'))
+    const filesToApply = filesGiven ? [] : ['.']
+
+    if (filesGiven) {
+      // we need to take all the flag-less arguments (the files that should be linted)
+      // and filter out the ones that aren't js files. Otherwise json or css files
+      // may be passed through
+      args = args.filter(a => !parsedArgs._.includes(a) || a.endsWith('.js'))
+    }
+
+    const result = spawn.sync(
+      resolveBin('eslint'),
+      [...config, ...ignore, ...cache, ...args, ...filesToApply],
+      {stdio: 'inherit'},
+    )
+
+    if (result.status > 0) throw new Error(result.message)
+
+    // eslint-disable-next-line no-process-exit
+    process.exit(result.status)
+  } catch (error) {
+    throw new Error(`Lint FAILED ${error.message}`)
+  }
 }
 
-const result = spawn.sync(
-  resolveBin('eslint'),
-  [...config, ...ignore, ...cache, ...args, ...filesToApply],
-  {stdio: 'inherit'},
-)
-
-process.exit(result.status)
+module.exports = (async () => {
+  await lint()
+})()

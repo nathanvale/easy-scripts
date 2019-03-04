@@ -41,4 +41,5 @@ const result = spawn.sync(
   {stdio: 'inherit'},
 )
 
+// eslint-disable-next-line no-process-exit
 process.exit(result.status)

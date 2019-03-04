@@ -1,7 +1,7 @@
 const browserslist = require('browserslist')
 const semver = require('semver')
-const {packageManager} = require('../jsonate')
-const {parseEnv, appDirectory} = require('../utils')
+const {packageManager} = require('../jsonate/')
+const {parseEnv, getAppDirectory, print} = require('../utils')
 
 const {BABEL_ENV, NODE_ENV, BUILD_FORMAT} = process.env
 const {ifAnyDep, getState: getPkgState} = packageManager()
@@ -25,7 +25,7 @@ if (!isMonorepo && !treeshake && !hasBabelRuntimeDep) {
   throw new Error(RUNTIME_HELPERS_WARN)
   //TODO: offer to install it
 } else if (treeshake && !isMonorepo && !isUMD && !hasBabelRuntimeDep) {
-  console.warn(RUNTIME_HELPERS_WARN)
+  print(RUNTIME_HELPERS_WARN)
 }
 
 /**
@@ -33,7 +33,7 @@ if (!isMonorepo && !treeshake && !hasBabelRuntimeDep) {
  * fallback to the default if don't find a custom configuration
  * @see https://github.com/browserslist/browserslist/blob/master/node.js#L139
  */
-const browsersConfig = browserslist.loadConfig({path: appDirectory}) || [
+const browsersConfig = browserslist.loadConfig({path: getAppDirectory()}) || [
   'ie 10',
   'ios 7',
 ]

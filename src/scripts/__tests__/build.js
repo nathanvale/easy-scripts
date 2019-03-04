@@ -6,33 +6,38 @@ jest.mock('rimraf')
 jest.mock('../../checkers')
 
 expect.addSnapshotSerializer(unquoteSerializer)
-
-let checkForTypescriptMock, crossSpawnSyncMock
+//TODO: add a mock for resolve bin
+let hasTypescriptFiles, crossSpawnSyncMock, verifyTypescriptMock, originalExit
 
 cases(
   'build',
   async ({setup = () => () => {}}) => {
     // beforeEach
-    checkForTypescriptMock = require('../../checkers').checkForTypescript
+    jest.resetModules()
+    hasTypescriptFiles = require('../../utils').hasTypescriptFiles
     crossSpawnSyncMock = require('cross-spawn').sync
-    const originalExit = process.exit
+    verifyTypescriptMock = require('../../checkers').verifyTypescript
+    originalExit = process.exit
     process.exit = jest.fn()
     const teardown = setup()
     try {
       await require('../build')
+      //We test for errors in our setup functions instead
+      // eslint-disable-next-line no-useless-catch
+      // eslint-disable-next-line no-empty
     } catch (error) {
-      throw error
     } finally {
-      expect(process.exit).toBeCalledWith(0)
       teardown()
     }
     // afterEach
     process.exit = originalExit
-    jest.resetModules()
   },
   {
     'with babel should use default args': {
       setup: withJavscript(setupWithArgs()),
+    },
+    'with a babel error should throw an error': {
+      setup: withBabelError(withJavscript(setupWithArgs())),
     },
     'with babel should ignore files set with --ignore': {
       setup: withJavscript(setupWithArgs(['--ignore', 'somefile.js'])),
@@ -55,6 +60,9 @@ cases(
     'with typescript and specified --source-maps should only compile specified --source-maps': {
       setup: withTypescript(setupWithArgs(['--source-maps'])),
     },
+    'with unverified typescript it should throw an error': {
+      setup: withUnverifiedTs(setupWithArgs()),
+    },
     // TODO: write tests for rollup
     // 'with rollup should use default args': {
     //   setup: withBuiltInConfig(setupWithArgs(['--bundle'])),
@@ -65,9 +73,11 @@ function withBuiltInConfig(setupFn) {
   return function setup() {
     const {
       useBuiltInBabelConfig: useBuiltInBabelConfigMock,
+      useBuiltInEslintIgnore: useBuiltInEslintIgnoreMock,
       fromConfigs,
     } = require('../../utils')
     useBuiltInBabelConfigMock.mockReturnValue(true)
+    useBuiltInEslintIgnoreMock.mockReturnValue(true)
     fromConfigs.mockReturnValue('~/src/config/babelrc.js')
     const teardownFn = setupFn()
     return function teardown() {
@@ -78,22 +88,46 @@ function withBuiltInConfig(setupFn) {
 
 function withJavscript(setupFn) {
   return function setup() {
-    checkForTypescriptMock.mockReturnValue(false)
+    hasTypescriptFiles.mockReturnValue(false)
     const teardownFn = setupFn()
     return function teardown() {
       const [firstCall] = crossSpawnSyncMock.mock.calls
       const [script, calledArgs] = firstCall
       expect(crossSpawnSyncMock).toHaveBeenCalledTimes(1)
-      //TODO: raise an issue with wallaby.js on how to mock --dirname
       expect([script, ...calledArgs].join(' ')).toMatchSnapshot()
+      expect(process.exit).toBeCalledWith(0)
+      expect(process.exit).toBeCalledTimes(1)
       teardownFn()
     }
   }
 }
 
+function withBabelError(setupFn) {
+  return function setup() {
+    crossSpawnSyncMock.mockImplementation(() => ({
+      status: 1,
+      message: 'some babel error',
+    }))
+    const teardownFn = setupFn()
+    return async function teardown() {
+      let errMessage
+      try {
+        await require('../build')
+      } catch (error) {
+        errMessage = error.message
+      }
+      expect(errMessage).toMatchInlineSnapshot(`Build FAILED some babel error`)
+      teardownFn()
+    }
+  }
+}
+
+//TODO: can be refactored withJavascript
 function withTypescript(setupFn) {
   return function setup() {
-    checkForTypescriptMock.mockReturnValue(true)
+    hasTypescriptFiles.mockReturnValue(true)
+    verifyTypescriptMock.mockResolvedValue(undefined)
+
     const teardownFn = setupFn()
     return function teardown() {
       const [firstCall, secondCall] = crossSpawnSyncMock.mock.calls
@@ -102,6 +136,28 @@ function withTypescript(setupFn) {
       expect(crossSpawnSyncMock).toHaveBeenCalledTimes(2)
       expect([scriptOne, ...calledArgsOne].join(' ')).toMatchSnapshot()
       expect([scriptTwo, ...calledArgsTwo].join(' ')).toMatchSnapshot()
+      expect(process.exit).toBeCalledWith(0)
+      expect(process.exit).toBeCalledTimes(1)
+      teardownFn()
+    }
+  }
+}
+
+function withUnverifiedTs(setupFn) {
+  return function setup() {
+    hasTypescriptFiles.mockReturnValue(true)
+    verifyTypescriptMock.mockImplementation(() => {
+      throw new Error('User not found')
+    })
+    const teardownFn = setupFn()
+    return async function teardown() {
+      let errMessage
+      try {
+        await require('../build')
+      } catch (error) {
+        errMessage = error.message
+      }
+      expect(errMessage).toMatchInlineSnapshot(`Build FAILED User not found`)
       teardownFn()
     }
   }

@@ -1,4 +1,4 @@
-const {packageManager} = require('../jsonate')
+const {packageManager} = require('../jsonate/')
 
 const {ifAnyDep} = packageManager()
 module.exports = {

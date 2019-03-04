@@ -1,30 +1,32 @@
-jest.mock('../jsonate')
+jest.mock('../jsonate/')
 jest.mock('which', () => ({sync: jest.fn(() => {})}))
 
-let jsonateMock, whichSyncMock
+const {
+  packageManager: packageManagerMock,
+  __initialPackageState,
+} = require('../jsonate/')
+
+let whichSyncMock
 
 beforeEach(() => {
-  jest.resetModules()
-  jsonateMock = require('../jsonate')
   whichSyncMock = require('which').sync
+  whichSyncMock.mockClear()
 })
 
 test('appDirectory is the dirname to the package.json', () => {
-  const pkgPath = '/some/path/to'
-  mockPkg({path: `${pkgPath}/package.json`})
-  expect(require('../utils').appDirectory).toBe(pkgPath)
+  setPackageManagerState()
+  expect(require('../utils').getAppDirectory()).toBe('~/some/path/to')
 })
 
 test('resolveNdvScripts resolves to src/index.js when in the ndv-scripts package', () => {
-  mockPkg({pkg: {name: 'ndv-scripts'}})
+  setPackageManagerState({config: {name: 'ndv-scripts'}})
   expect(require('../utils').resolveNdvScripts()).toBe(
     require.resolve('../').replace(process.cwd(), '.'),
   )
 })
 
-//TODO: WORKS IN JEST - raise a pull request with wallaby as to why this doesn't work???
 test('resolveNdvScripts resolves to ndv-scripts if not in the ndv-scripts package', () => {
-  mockPkg({pkg: {name: 'not-ndv-scripts'}})
+  setPackageManagerState({config: {name: 'not-ndv-scripts'}})
   whichSyncMock.mockImplementationOnce(() => require.resolve('../'))
   expect(require('../utils').resolveNdvScripts()).toBe('ndv-scripts')
 })
@@ -79,9 +81,8 @@ test(`parseEnv returns the default if the environment variable doesn't exist`, (
   )
 })
 
-function mockPkg({pkg = {}, path = '/blah/package.json'}) {
-  jsonateMock.packageManager().getState.mockImplementation(() => ({
-    config: pkg,
-    configPath: path,
-  }))
+function setPackageManagerState(initialState = __initialPackageState) {
+  return packageManagerMock({
+    initialState,
+  })
 }

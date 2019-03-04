@@ -35,6 +35,7 @@ cases(
       expect([scriptOne, ...calledArgsOne].join(' ')).toMatchSnapshot()
       const [scriptTwo, calledArgsTwo] = secondCall
       expect([scriptTwo, ...calledArgsTwo].join(' ')).toMatchSnapshot()
+      // eslint-disable-next-line no-useless-catch
     } catch (error) {
       throw error
     } finally {

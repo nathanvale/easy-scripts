@@ -11,4 +11,5 @@ const result = spawn.sync(
   },
 )
 
+// eslint-disable-next-line no-process-exit
 process.exit(result.status)
