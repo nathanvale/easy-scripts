@@ -3,17 +3,21 @@ const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 const fs = require('fs')
 const path = require('path')
+const glob = require('glob')
 const mkdirp = require('mkdirp')
 const rimraf = require('rimraf')
 const which = require('which')
 const arrify = require('arrify')
 const {packageManager} = require('./jsonate')
 
-const {getState: getPkgState, hasProp: hasPkgProp} = packageManager()
-const appDirectory = path.dirname(getPkgState().configPath)
+function getAppDirectory() {
+  const {getState: getPkgState} = packageManager()
+  return path.dirname(getPkgState().configPath)
+}
 
 function resolveNdvScripts() {
-  if (getPkgState().config.name === 'ndv-scripts') {
+  const {getProp: getPkgProp} = packageManager()
+  if (getPkgProp('name') === 'ndv-scripts') {
     return require.resolve('./').replace(process.cwd(), '.')
   }
   return resolveBin('ndv-scripts')
@@ -45,7 +49,7 @@ function resolveBin(modName, {executable = modName, cwd = process.cwd()} = {}) {
   }
 }
 
-const fromRoot = (...p) => path.join(appDirectory, ...p)
+const fromRoot = (...p) => path.join(getAppDirectory(), ...p)
 const hasFile = (...p) => fs.existsSync(fromRoot(...p))
 const ifFile = (files, t, f) =>
   arrify(files).some(file => hasFile(file)) ? t : f
@@ -148,19 +152,20 @@ function writeExtraEntry(name, {cjs, esm}, clean = true) {
 }
 
 //TODO: should this throw an error?
+//TODO: add this to jsonate
 function createConfig(p, c) {
   fs.writeFileSync(p, c, err => {
     if (err) {
-      console.log(err)
+      print(err)
     }
-    console.log('The file was saved!')
+    print('The file was saved!')
   })
 }
 
 function execCmd(command, options = {}, silent = true) {
   if (!silent) {
     //TODO: use print to colwidth here .... DONE
-    console.log(command)
+    print(command)
   }
   return exec(command, options)
     .then(response => response.stdout)
@@ -177,33 +182,71 @@ function wait(timeout) {
 }
 
 function print(message) {
+  // eslint-disable-next-line no-console
   console.info(message)
 }
 
 function useBuiltInBabelConfig(args) {
+  const {hasProp: hasPkgProp} = packageManager()
   return (
-    !args.includes('--presets') &&
-    !hasFile('.babelrc') &&
-    !hasFile('.babelrc.js') &&
-    !hasFile('babel.config.js') &&
-    !hasPkgProp('babel')
+    isDogfooding() ||
+    (!args.includes('--presets') &&
+      !hasFile('.babelrc') &&
+      !hasFile('.babelrc.js') &&
+      !hasFile('babel.config.js') &&
+      !hasPkgProp('babel'))
+  )
+}
+
+function useBuiltInEslintConfig(args) {
+  const {hasProp: hasPkgProp} = packageManager()
+  return (
+    isDogfooding() ||
+    (!args.includes('--config') &&
+      !hasFile('.eslintrc') &&
+      !hasFile('.eslintrc.js') &&
+      !hasPkgProp('eslintConfig'))
+  )
+}
+
+function useBuiltInEslintIgnore(args) {
+  const {hasProp: hasPkgProp} = packageManager()
+  return (
+    isDogfooding() ||
+    (!args.includes('--ignore-path') &&
+      !hasFile('.eslintignore') &&
+      !hasPkgProp('eslintIgnore'))
   )
 }
 
 function fromConfigs(p) {
-  return path.join(fromRoot('src/config'), p)
+  return path.join(__dirname, './config/', p)
+}
+
+function hasTypescriptFiles() {
+  return (
+    !isDogfooding() &&
+    glob.sync(fromRoot('!(node_modules)/**/*.{ts,tsx}')).length > 0
+  )
+}
+
+function isDogfooding() {
+  const {getProp: getPkgProp} = packageManager()
+  return getPkgProp('name') === 'ndv-scripts'
 }
 
 module.exports = {
-  appDirectory,
   createConfig,
   envIsSet,
   execCmd,
-  fromRoot,
   fromConfigs,
+  fromRoot,
+  getAppDirectory,
   getConcurrentlyArgs,
   hasFile,
+  hasTypescriptFiles,
   ifFile,
+  isDogfooding,
   isOptedIn,
   isOptedOut,
   parseEnv,
@@ -211,6 +254,8 @@ module.exports = {
   resolveBin,
   resolveNdvScripts,
   uniq,
+  useBuiltInEslintConfig,
+  useBuiltInEslintIgnore,
   useBuiltInBabelConfig,
   wait,
   writeExtraEntry,

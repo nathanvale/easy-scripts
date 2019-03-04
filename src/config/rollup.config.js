@@ -11,7 +11,7 @@ const nodeBuiltIns = require('rollup-plugin-node-builtins')
 const nodeGlobals = require('rollup-plugin-node-globals')
 const {sizeSnapshot} = require('rollup-plugin-size-snapshot')
 const omit = require('lodash.omit')
-const {packageManager} = require('../jsonate')
+const {packageManager} = require('../jsonate/')
 
 const {getState: getPkgState, hasProp: hasPkgProp} = packageManager()
 

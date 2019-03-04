@@ -7,4 +7,5 @@ const tscResult = spawn.sync(resolveBin('tsc'), ['--noEmit', ...args], {
   stdio: 'inherit',
 })
 
+// eslint-disable-next-line no-process-exit
 process.exit(tscResult.status)

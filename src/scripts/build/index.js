@@ -1,11 +1,12 @@
-const {checkForTypescript} = require('../../checkers')
-
-let result
+const {hasTypescriptFiles} = require('../../utils')
+const {verifyTypescript} = require('../../checkers')
 
 async function build() {
+  let result
+
   try {
-    const hasTypescript = await checkForTypescript()
-    if (hasTypescript) {
+    if (hasTypescriptFiles()) {
+      const t = await verifyTypescript()
       const useSpecifiedExtensions = process.argv.includes('--extensions')
       if (!useSpecifiedExtensions) {
         const extensions = ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx']
@@ -20,15 +21,18 @@ async function build() {
       result = await require('./rollup')
     } else {
       result = require('./babel').build()
-      if (result.status === 0 && hasTypescript) {
+
+      if (result.status > 0) throw new Error(result.message)
+
+      if (result.status === 0 && hasTypescriptFiles()) {
         process.argv = []
         result = require('../build-types').build()
       }
+      // eslint-disable-next-line no-process-exit
       process.exit(result.status)
     }
-  } catch (e) {
-    //TODO: standarise the param (e or error)
-    throw e
+  } catch (error) {
+    throw new Error(`Build FAILED ${error.message}`)
   }
 }
 module.exports = (async () => {

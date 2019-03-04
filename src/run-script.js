@@ -33,6 +33,7 @@ Options:
 
 May the force be with you.
   `.trim()
+  // eslint-disable-next-line no-console
   console.log(`\n${fullMessage}\n`)
 }
 
@@ -67,24 +68,28 @@ function spawnScript() {
   if (result.signal) {
     handleSignal(result)
   } else {
+    // eslint-disable-next-line no-process-exit
     process.exit(result.status)
   }
 }
 
 function handleSignal(result) {
   if (result.signal === 'SIGKILL') {
+    // eslint-disable-next-line no-console
     console.log(
       `The script "${script}" failed because the process exited too early. ` +
         'This probably means the system ran out of memory or someone called ' +
         '`kill -9` on the process.',
     )
   } else if (result.signal === 'SIGTERM') {
+    // eslint-disable-next-line no-console
     console.log(
       `The script "${script}" failed because the process exited too early. ` +
         'Someone might have called `kill` or `killall`, or the system could ' +
         'be shutting down.',
     )
   }
+  // eslint-disable-next-line no-process-exit
   process.exit(1)
 }
 

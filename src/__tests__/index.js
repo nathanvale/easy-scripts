@@ -18,8 +18,10 @@ cases(
     const {sync: crossSpawnSyncMock} = require('cross-spawn')
     const originalExit = process.exit
     const originalArgv = process.argv
+    // eslint-disable-next-line no-console
     const originalLog = console.log
     process.exit = jest.fn()
+    // eslint-disable-next-line no-console
     console.log = jest.fn()
     try {
       // tests
@@ -30,10 +32,12 @@ cases(
       }
       require('../')
       if (snapshotLog) {
+        // eslint-disable-next-line no-console
         expect(console.log.mock.calls).toMatchSnapshot()
       } else if (signal) {
         expect(process.exit).toHaveBeenCalledTimes(1)
         expect(process.exit).toHaveBeenCalledWith(1)
+        // eslint-disable-next-line no-console
         expect(console.log.mock.calls).toMatchSnapshot()
       } else {
         expect(crossSpawnSyncMock).toHaveBeenCalledTimes(1)
@@ -51,6 +55,7 @@ cases(
       // afterEach
       process.exit = originalExit
       process.argv = originalArgv
+      // eslint-disable-next-line no-console
       console.log = originalLog
       jest.resetModules()
     }

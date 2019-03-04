@@ -2,7 +2,8 @@ process.env.BABEL_ENV = 'test'
 process.env.NODE_ENV = 'test'
 
 const isCI = require('is-ci')
-const {hasPkgProp, parseEnv, hasFile} = require('../utils')
+const {parseEnv, hasFile} = require('../utils')
+const {hasProp} = require('../jsonate').packageManager()
 
 const args = process.argv.slice(2)
 
@@ -16,9 +17,7 @@ const watch =
     : []
 
 const config =
-  !args.includes('--config') &&
-  !hasFile('jest.config.js') &&
-  !hasPkgProp('jest')
+  !args.includes('--config') && !hasFile('jest.config.js') && !hasProp('jest')
     ? ['--config', JSON.stringify(require('../config/jest.config'))]
     : []
 

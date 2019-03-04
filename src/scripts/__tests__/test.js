@@ -43,6 +43,7 @@ cases(
       const [firstCall] = jestRunMock.mock.calls
       const [jestArgs] = firstCall
       expect(jestArgs.join(' ')).toMatchSnapshot()
+      // eslint-disable-next-line no-useless-catch
     } catch (error) {
       throw error
     } finally {

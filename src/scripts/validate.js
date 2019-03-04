@@ -1,6 +1,6 @@
 const spawn = require('cross-spawn')
 const {parseEnv, resolveBin, getConcurrentlyArgs} = require('../utils')
-const {packageManager} = require('../jsonate')
+const {packageManager} = require('../jsonate/')
 
 const {ifScript} = packageManager()
 
@@ -33,4 +33,5 @@ const result = spawn.sync(
   {stdio: 'inherit'},
 )
 
+// eslint-disable-next-line no-process-exit
 process.exit(result.status)

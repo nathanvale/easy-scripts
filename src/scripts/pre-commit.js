@@ -1,6 +1,6 @@
 const path = require('path')
 const spawn = require('cross-spawn')
-const {packageManager} = require('../jsonate')
+const {packageManager} = require('../jsonate/')
 
 const {hasProp: hasPkgProp} = packageManager()
 const {isOptedIn, hasFile, resolveBin} = require('../utils')
@@ -27,10 +27,12 @@ const lintStagedResult = spawn.sync(
 )
 
 if (lintStagedResult.status !== 0 || !isOptedIn('pre-commit')) {
+  // eslint-disable-next-line no-process-exit
   process.exit(lintStagedResult.status)
 } else {
   const validateResult = spawn.sync('npm', ['run', 'validate'], {
     stdio: 'inherit',
   })
+  // eslint-disable-next-line no-process-exit
   process.exit(validateResult.status)
 }
