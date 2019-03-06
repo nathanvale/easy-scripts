@@ -235,6 +235,11 @@ function isDogfooding() {
   return getPkgProp('name') === 'ndv-scripts'
 }
 
+function ifTypescriptProject(t, f) {
+  const {hasAnyDep} = packageManager()
+  return hasTypescriptFiles() && hasAnyDep('typescript') ? t : f
+}
+
 module.exports = {
   createConfig,
   envIsSet,
@@ -247,6 +252,7 @@ module.exports = {
   hasTypescriptFiles,
   ifFile,
   isDogfooding,
+  ifTypescriptProject,
   isOptedIn,
   isOptedOut,
   parseEnv,
