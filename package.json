@@ -1,14 +1,14 @@
 {
-  "name": "ndv-scripts",
+  "name": "easy-scripts",
   "version": "0.0.0-semantically-released",
   "description": "This is a CLI that abstracts away the configuration of my open source projects. Why copy and paste the configuration of jest, prettier, commitlint, babel builds and more when you can share all this on npm?",
-  "homepage": "https://github.com/nathanvale/ndv-scripts#readme",
+  "homepage": "https://github.com/nathanvale/easy-scripts#readme",
   "bugs": {
-    "url": "https://github.com/nathanvale/ndv-scripts/issues"
+    "url": "https://github.com/nathanvale/easy-scripts/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nathanvale/ndv-scripts.git"
+    "url": "https://github.com/nathanvale/easy-scripts.git"
   },
   "license": "MIT",
   "author": "Nathan Vale <hi@nathanvale.com>",

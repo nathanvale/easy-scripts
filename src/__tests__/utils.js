@@ -18,17 +18,17 @@ test('appDirectory is the dirname to the package.json', () => {
   expect(require('../utils').getAppDirectory()).toBe('~/some/path/to')
 })
 
-test('resolveNdvScripts resolves to src/index.js when in the ndv-scripts package', () => {
-  setPackageManagerState({config: {name: 'ndv-scripts'}})
+test('resolveNdvScripts resolves to src/index.js when in the easy-scripts package', () => {
+  setPackageManagerState({config: {name: 'easy-scripts'}})
   expect(require('../utils').resolveNdvScripts()).toBe(
     require.resolve('../').replace(process.cwd(), '.'),
   )
 })
 
-test('resolveNdvScripts resolves to ndv-scripts if not in the ndv-scripts package', () => {
-  setPackageManagerState({config: {name: 'not-ndv-scripts'}})
+test('resolveNdvScripts resolves to easy-scripts if not in the easy-scripts package', () => {
+  setPackageManagerState({config: {name: 'not-easy-scripts'}})
   whichSyncMock.mockImplementationOnce(() => require.resolve('../'))
-  expect(require('../utils').resolveNdvScripts()).toBe('ndv-scripts')
+  expect(require('../utils').resolveNdvScripts()).toBe('easy-scripts')
 })
 
 test(`resolveBin resolves to the full path when it's not in $PATH`, () => {

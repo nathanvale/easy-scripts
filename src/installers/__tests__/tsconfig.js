@@ -55,7 +55,7 @@ it('should return true and write to a file when the user asks to have a tsconfig
 Array [
   ~/some/path/to/tsconnfig.json,
   {
-  "extends": "./node_modules/ndv-scripts/dist/config/tsconfig.json",
+  "extends": "./node_modules/easy-scripts/dist/config/tsconfig.json",
   "include": [
     "custom-src",
     "types"

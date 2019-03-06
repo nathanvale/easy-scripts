@@ -17,10 +17,10 @@ function getAppDirectory() {
 
 function resolveNdvScripts() {
   const {getProp: getPkgProp} = packageManager()
-  if (getPkgProp('name') === 'ndv-scripts') {
+  if (getPkgProp('name') === 'easy-scripts') {
     return require.resolve('./').replace(process.cwd(), '.')
   }
-  return resolveBin('ndv-scripts')
+  return resolveBin('easy-scripts')
 }
 
 // eslint-disable-next-line complexity
@@ -232,7 +232,7 @@ function hasTypescriptFiles() {
 
 function isDogfooding() {
   const {getProp: getPkgProp} = packageManager()
-  return getPkgProp('name') === 'ndv-scripts'
+  return getPkgProp('name') === 'easy-scripts'
 }
 
 function ifTypescriptProject(t, f) {
