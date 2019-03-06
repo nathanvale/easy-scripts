@@ -35,7 +35,7 @@ async function installTsConfig() {
 
 function tsconfigFactory({src, dist}) {
   return `{
-  "extends": "./node_modules/ndv-scripts/dist/config/tsconfig.json",
+  "extends": "./node_modules/easy-scripts/dist/config/tsconfig.json",
   "include": [
     "${src}",
     "types"
