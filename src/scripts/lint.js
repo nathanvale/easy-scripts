@@ -5,6 +5,7 @@ const {
   fromConfigs,
   useBuiltInEslintConfig,
   useBuiltInEslintIgnore,
+  print,
 } = require('../utils')
 
 async function lint() {
@@ -51,15 +52,17 @@ async function lint() {
       {stdio: 'inherit'},
     )
 
-    if (result.status > 0) throw new Error(result.message)
-
-    // eslint-disable-next-line no-process-exit
-    process.exit(result.status)
+    if (result.status > 0) {
+      print(`Linting FAILED :(`)
+    } else {
+      print(`Linting Successful :)`)
+    }
   } catch (error) {
-    throw new Error(`Lint FAILED ${error.message}`)
+    print(`Linting FAILED :(`)
+    print(error)
   }
 }
 
-module.exports = (async () => {
+;(async () => {
   await lint()
 })()

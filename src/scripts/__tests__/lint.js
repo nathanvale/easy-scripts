@@ -1,57 +1,58 @@
 import cases from 'jest-in-case'
 import {unquoteSerializer, winPathSerializer} from '../../helpers/serializers'
 
+const {prettyCalls} = require('../../helpers/pretty-calls')
+
 jest.mock('../../utils')
 
 expect.addSnapshotSerializer(unquoteSerializer)
 expect.addSnapshotSerializer(winPathSerializer)
 
-let crossSpawnSyncMock, originalArgv, originalExit
+let crossSpawnSyncMock, originalArgv, printMock
 
 cases(
   'lint',
   async ({setup = () => () => {}}) => {
     // beforeEach
+    jest.resetModules()
     crossSpawnSyncMock = require('cross-spawn').sync
-    originalArgv = process.argv
-    originalExit = process.exit
-
-    process.exit = jest.fn()
-    const teardown = setup()
+    printMock = require('../../utils').print
+    const teardown = await setup()
     try {
       // tests
       await require('../lint')
-      expect(crossSpawnSyncMock).toHaveBeenCalledTimes(1)
-      const [firstCall] = crossSpawnSyncMock.mock.calls
-      const [script, calledArgs] = firstCall
-      expect([script, ...calledArgs].join(' ')).toMatchSnapshot()
       // eslint-disable-next-line no-useless-catch
-      // eslint-disable-next-line no-empty
     } catch (error) {
+      throw error
     } finally {
-      teardown()
-      // afterEach
-      process.exit = originalExit
-      process.argv = originalArgv
-      jest.resetModules()
+      await teardown()
     }
   },
   {
-    'calls eslint CLI with default args': {setup: setupWithArgs()},
-    qwerty: {setup: withEslintError(setupWithArgs())},
-    'should compile files with --presets and --ignore-path when using built in configs': {
-      setup: withBuiltInConfig(setupWithArgs()),
+    'calls eslint CLI with default args': {
+      setup: withDefault(setupWithArgs()),
+    },
+    'should exit gracefully when an error is thrown': {
+      setup: withDefault(withThrownError(setupWithArgs())),
+    },
+    'should print eslint fail message': {
+      setup: withDefault(withEslintFail(setupWithArgs())),
+    },
+    'should compile files with --config and --ignore-path when using built in configs': {
+      setup: withDefault(withBuiltInConfig(setupWithArgs())),
     },
     '--no-cache will disable caching': {
-      setup: setupWithArgs(['--no-cache']),
+      setup: withDefault(setupWithArgs(['--no-cache'])),
     },
     'runs on given files, but only js files': {
-      setup: setupWithArgs([
-        './src/index.js',
-        './package.json',
-        './src/index.css',
-        './src/component.js',
-      ]),
+      setup: withDefault(
+        setupWithArgs([
+          './src/index.js',
+          './package.json',
+          './src/index.css',
+          './src/component.js',
+        ]),
+      ),
     },
   },
 )
@@ -74,21 +75,56 @@ function withBuiltInConfig(setupFn) {
   }
 }
 
-function withEslintError(setupFn) {
+function withThrownError(setupFn) {
+  return function setup() {
+    const error = new Error('some crazy error')
+    crossSpawnSyncMock.mockImplementation(() => {
+      throw error
+    })
+    const teardownFn = setupFn()
+
+    return function teardown() {
+      expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
+Call 1:
+  Argument 1:
+    Linting FAILED :(
+Call 2:
+  Argument 1:
+    Error: some crazy error
+`)
+      teardownFn()
+    }
+  }
+}
+
+function withDefault(setupFn) {
+  return function setup() {
+    crossSpawnSyncMock.mockImplementation(() => ({
+      status: 0,
+    }))
+    const teardownFn = setupFn()
+    return function teardown() {
+      expect(crossSpawnSyncMock).toHaveBeenCalledTimes(1)
+      const [firstCall] = crossSpawnSyncMock.mock.calls
+      const [script, calledArgs] = firstCall
+      expect([script, ...calledArgs].join(' ')).toMatchSnapshot()
+      teardownFn()
+    }
+  }
+}
+
+function withEslintFail(setupFn) {
   return function setup() {
     crossSpawnSyncMock.mockImplementation(() => ({
       status: 1,
-      message: 'some eslint error',
     }))
     const teardownFn = setupFn()
-    return async function teardown() {
-      let errMessage
-      try {
-        await require('../lint')
-      } catch (error) {
-        errMessage = error.message
-      }
-      expect(errMessage).toMatchInlineSnapshot(`Lint FAILED some eslint error`)
+    return function teardown() {
+      expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
+Call 1:
+  Argument 1:
+    Linting FAILED :(
+`)
       teardownFn()
     }
   }
