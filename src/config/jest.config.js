@@ -40,7 +40,7 @@ const jestConfig = {
 }
 
 if (useBuiltInBabelConfig) {
-  jestConfig.transform = {'^.+\\.js$': here('./babel-transform')}
+  jestConfig.transform = {'^.+\\.(ts|tsx|js|jsx)$': here('./babel-transform')}
 }
 
 module.exports = jestConfig
