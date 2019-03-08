@@ -21,6 +21,7 @@ const ignores = [
 
 const jestConfig = {
   roots: [fromRoot('src')],
+  transform: {'^.+\\.(ts|tsx|js|jsx)$': 'babel-jest'},
   testEnvironment: ifAnyDep(['webpack', 'rollup', 'react'], 'jsdom', 'node'),
   testURL: 'http://localhost',
   moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
