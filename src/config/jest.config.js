@@ -21,6 +21,7 @@ const ignores = [
 
 const jestConfig = {
   roots: [fromRoot('src')],
+  transform: {'^.+\\.(ts|tsx|js|jsx)$': 'babel-jest'},
   testEnvironment: ifAnyDep(['webpack', 'rollup', 'react'], 'jsdom', 'node'),
   testURL: 'http://localhost',
   moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
@@ -40,7 +41,7 @@ const jestConfig = {
 }
 
 if (useBuiltInBabelConfig) {
-  jestConfig.transform = {'^.+\\.js$': here('./babel-transform')}
+  jestConfig.transform = {'^.+\\.(ts|tsx|js|jsx)$': here('./babel-transform')}
 }
 
 module.exports = jestConfig
