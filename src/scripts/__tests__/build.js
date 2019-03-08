@@ -1,13 +1,15 @@
 import cases from 'jest-in-case'
 import {unquoteSerializer} from '../../helpers/serializers'
 
+const {prettyCalls} = require('../../helpers/pretty-calls')
+
 jest.mock('../../utils')
 jest.mock('rimraf')
 jest.mock('../../checkers')
 
 expect.addSnapshotSerializer(unquoteSerializer)
 //TODO: add a mock for resolve bin
-let hasTypescriptFiles, crossSpawnSyncMock, verifyTypescriptMock, originalExit
+let hasTypescriptFiles, crossSpawnSyncMock, verifyTypescriptMock, printMock
 
 cases(
   'build',
@@ -17,50 +19,63 @@ cases(
     hasTypescriptFiles = require('../../utils').hasTypescriptFiles
     crossSpawnSyncMock = require('cross-spawn').sync
     verifyTypescriptMock = require('../../checkers').verifyTypescript
-    originalExit = process.exit
-    process.exit = jest.fn()
-    const teardown = setup()
+    printMock = require('../../utils').print
+    const teardown = await setup()
     try {
       await require('../build')
-      //We test for errors in our setup functions instead
       // eslint-disable-next-line no-useless-catch
-      // eslint-disable-next-line no-empty
     } catch (error) {
+      throw error
     } finally {
-      teardown()
+      await teardown()
     }
-    // afterEach
-    process.exit = originalExit
   },
   {
-    'with babel should use default args': {
-      setup: withJavscript(setupWithArgs()),
+    'should exit gracefully when an error is thrown': {
+      setup: withThrownError(setupWithArgs()),
     },
-    'with a babel error should throw an error': {
-      setup: withBabelError(withJavscript(setupWithArgs())),
+    'with babel should use default args': {
+      setup: withDefault(setupWithArgs()),
+    },
+    'with a babel error should print an error': {
+      setup: withBabelFail(setupWithArgs()),
     },
     'with babel should ignore files set with --ignore': {
-      setup: withJavscript(setupWithArgs(['--ignore', 'somefile.js'])),
+      setup: withDefault(setupWithArgs(['--ignore', 'somefile.js'])),
     },
     'with babel should not copy files with --no-copy-files': {
-      setup: withJavscript(setupWithArgs(['--no-copy-files'])),
+      setup: withDefault(setupWithArgs(['--no-copy-files'])),
     },
     'with babel should compile files to a specified --out-dir': {
-      setup: withJavscript(setupWithArgs(['--out-dir'])),
+      setup: withDefault(setupWithArgs(['--out-dir'])),
     },
     'with babel should compile files with --presets when using a built in config': {
-      setup: withJavscript(withBuiltInConfig(setupWithArgs())),
+      setup: withDefault(withBuiltInConfig(setupWithArgs())),
     },
     'with typescript and no specified extenstions should also compile .ts,.tsx files': {
-      setup: withTypescript(setupWithArgs()),
+      setup: withTypescript(withBabelTSArgsAssert(setupWithArgs())),
     },
     'with typescript and specified --extensions should only compile specified --extensions': {
-      setup: withTypescript(setupWithArgs(['--extensions', '.ts'])),
+      setup: withTypescript(
+        withBabelTSArgsAssert(setupWithArgs(['--extensions', '.ts'])),
+      ),
     },
     'with typescript and specified --source-maps should only compile specified --source-maps': {
-      setup: withTypescript(setupWithArgs(['--source-maps'])),
+      setup: withTypescript(
+        withBabelTSArgsAssert(setupWithArgs(['--source-maps'])),
+      ),
     },
-    'with unverified typescript it should throw an error': {
+    'tsc should generate types with the correct args': {
+      setup: withTypescript(
+        withTSCArgsAssert(setupWithArgs(['--source-maps'])),
+      ),
+    },
+    'with a ts error should print an error': {
+      setup: withTypescript(
+        withBuildTypesFail(setupWithArgs(['--source-maps'])),
+      ),
+    },
+    'with unverified typescript it should print an error': {
       setup: withUnverifiedTs(setupWithArgs()),
     },
     // TODO: write tests for rollup
@@ -86,7 +101,87 @@ function withBuiltInConfig(setupFn) {
   }
 }
 
-function withJavscript(setupFn) {
+function withThrownError(setupFn) {
+  return function setup() {
+    const error = new Error('some crazy error')
+    crossSpawnSyncMock.mockImplementation(() => {
+      throw error
+    })
+    const teardownFn = setupFn()
+    printMock.mockClear()
+    return function teardown() {
+      expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
+Call 1:
+  Argument 1:
+    Proceeding to build files with babel args:
+
+--out-dir dist --copy-files --ignore __tests__,__mocks__ src
+
+Call 2:
+  Argument 1:
+    Build FAILED :(
+Call 3:
+  Argument 1:
+    Error: some crazy error
+`)
+      teardownFn()
+    }
+  }
+}
+
+function withBabelFail(setupFn) {
+  return function setup() {
+    crossSpawnSyncMock.mockImplementation(() => ({
+      status: 1,
+    }))
+    const teardownFn = setupFn()
+    return function teardown() {
+      expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
+Call 1:
+  Argument 1:
+    Proceeding to build files with babel args:
+
+--out-dir dist --copy-files --ignore __tests__,__mocks__ src
+
+Call 2:
+  Argument 1:
+    Build FAILED :(
+`)
+      teardownFn()
+    }
+  }
+}
+
+function withBuildTypesFail(setupFn) {
+  return function setup() {
+    crossSpawnSyncMock.mockImplementationOnce(() => ({
+      status: 0,
+    }))
+    crossSpawnSyncMock.mockImplementationOnce(() => ({
+      status: 1,
+    }))
+    const teardownFn = setupFn()
+    return function teardown() {
+      expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
+Call 1:
+  Argument 1:
+    Proceeding to build files with babel args:
+
+--out-dir dist --copy-files --ignore __tests__,__mocks__ src --source-maps --extensions .es6,.es,.jsx,.js,.mjs,.ts,.tsx
+
+Call 2:
+  Argument 1:
+    Build Successful :)
+Call 3:
+  Argument 1:
+    Building Types FAILED :(
+`)
+      teardownFn()
+    }
+  }
+}
+
+function withDefault(setupFn) {
   return function setup() {
     hasTypescriptFiles.mockReturnValue(false)
     const teardownFn = setupFn()
@@ -95,39 +190,49 @@ function withJavscript(setupFn) {
       const [script, calledArgs] = firstCall
       expect(crossSpawnSyncMock).toHaveBeenCalledTimes(1)
       expect([script, ...calledArgs].join(' ')).toMatchSnapshot()
-      expect(process.exit).toBeCalledWith(0)
-      expect(process.exit).toBeCalledTimes(1)
       teardownFn()
     }
   }
 }
 
-function withBabelError(setupFn) {
-  return function setup() {
-    crossSpawnSyncMock.mockImplementation(() => ({
-      status: 1,
-      message: 'some babel error',
-    }))
-    const teardownFn = setupFn()
-    return async function teardown() {
-      let errMessage
-      try {
-        await require('../build')
-      } catch (error) {
-        errMessage = error.message
-      }
-      expect(errMessage).toMatchInlineSnapshot(`Build FAILED some babel error`)
-      teardownFn()
-    }
-  }
-}
-
-//TODO: can be refactored withJavascript
 function withTypescript(setupFn) {
   return function setup() {
     hasTypescriptFiles.mockReturnValue(true)
-    verifyTypescriptMock.mockResolvedValue(undefined)
+    const teardownFn = setupFn()
+    return function teardown() {
+      teardownFn()
+    }
+  }
+}
 
+function withBabelTSArgsAssert(setupFn) {
+  return function setup() {
+    const teardownFn = setupFn()
+    return function teardown() {
+      const [firstCall] = crossSpawnSyncMock.mock.calls
+      const [scriptOne, calledArgsOne] = firstCall
+      expect([scriptOne, ...calledArgsOne].join(' ')).toMatchSnapshot()
+      teardownFn()
+    }
+  }
+}
+
+function withTSCArgsAssert(setupFn) {
+  return function setup() {
+    const teardownFn = setupFn()
+    return function teardown() {
+      // eslint-disable-next-line no-unused-vars
+      const [_, secondCall] = crossSpawnSyncMock.mock.calls
+      const [scriptTwo, calledArgsTwo] = secondCall
+      expect(crossSpawnSyncMock).toHaveBeenCalledTimes(2)
+      expect([scriptTwo, ...calledArgsTwo].join(' ')).toMatchSnapshot()
+      teardownFn()
+    }
+  }
+}
+
+function withTSArgsCheck(setupFn) {
+  return function setup() {
     const teardownFn = setupFn()
     return function teardown() {
       const [firstCall, secondCall] = crossSpawnSyncMock.mock.calls
@@ -136,8 +241,6 @@ function withTypescript(setupFn) {
       expect(crossSpawnSyncMock).toHaveBeenCalledTimes(2)
       expect([scriptOne, ...calledArgsOne].join(' ')).toMatchSnapshot()
       expect([scriptTwo, ...calledArgsTwo].join(' ')).toMatchSnapshot()
-      expect(process.exit).toBeCalledWith(0)
-      expect(process.exit).toBeCalledTimes(1)
       teardownFn()
     }
   }
@@ -147,17 +250,18 @@ function withUnverifiedTs(setupFn) {
   return function setup() {
     hasTypescriptFiles.mockReturnValue(true)
     verifyTypescriptMock.mockImplementation(() => {
-      throw new Error('User not found')
+      throw new Error('Typescript is not setup!')
     })
     const teardownFn = setupFn()
-    return async function teardown() {
-      let errMessage
-      try {
-        await require('../build')
-      } catch (error) {
-        errMessage = error.message
-      }
-      expect(errMessage).toMatchInlineSnapshot(`Build FAILED User not found`)
+    return function teardown() {
+      expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
+Call 1:
+  Argument 1:
+    Build FAILED :(
+Call 2:
+  Argument 1:
+    Error: Typescript is not setup!
+`)
       teardownFn()
     }
   }

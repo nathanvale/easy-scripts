@@ -45,6 +45,7 @@ function build() {
     finalArgs,
     {stdio: 'inherit'},
   )
+
   return result
 }
 

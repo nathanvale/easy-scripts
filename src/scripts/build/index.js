@@ -1,12 +1,11 @@
-const {hasTypescriptFiles} = require('../../utils')
+const {hasTypescriptFiles, print} = require('../../utils')
 const {verifyTypescript} = require('../../checkers')
 
 async function build() {
-  let result
-
   try {
+    let result
     if (hasTypescriptFiles()) {
-      const t = await verifyTypescript()
+      await verifyTypescript()
       const useSpecifiedExtensions = process.argv.includes('--extensions')
       if (!useSpecifiedExtensions) {
         const extensions = ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx']
@@ -21,20 +20,28 @@ async function build() {
       result = await require('./rollup')
     } else {
       result = require('./babel').build()
-
-      if (result.status > 0) throw new Error(result.message)
+      if (result.status > 0) {
+        print(`Build FAILED :(`)
+      } else {
+        print(`Build Successful :)`)
+      }
 
       if (result.status === 0 && hasTypescriptFiles()) {
         process.argv = []
+        //TODO: move handling of result into build-types.js
         result = require('../build-types').build()
+        if (result.status > 0) {
+          print(`Building Types FAILED :(`)
+        } else {
+          print(`Build Types Successful :)`)
+        }
       }
-      // eslint-disable-next-line no-process-exit
-      process.exit(result.status)
     }
   } catch (error) {
-    throw new Error(`Build FAILED ${error.message}`)
+    print(`Build FAILED :(`)
+    print(error)
   }
 }
-module.exports = (async () => {
+;(async () => {
   await build()
 })()
