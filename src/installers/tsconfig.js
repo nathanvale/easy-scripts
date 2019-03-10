@@ -32,14 +32,10 @@ async function installTsConfig() {
   //TODO: tell the user what we have done after its created
   return true
 }
-
 function tsconfigFactory({src, dist}) {
   return `{
   "extends": "./node_modules/easy-scripts/dist/config/tsconfig.json",
-  "include": [
-    "${src}",
-    "types"
-  ],
+  "include": ["${src}", "types"],
   "compilerOptions": {
     "declarationDir": "${dist}"
   }
