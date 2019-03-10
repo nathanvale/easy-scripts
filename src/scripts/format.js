@@ -1,27 +1,25 @@
-const path = require('path')
 const spawn = require('cross-spawn')
 const yargsParser = require('yargs-parser')
-const {hasPkgProp, resolveBin, hasFile} = require('../utils')
+const {resolveBin, hasFile, fromConfigs} = require('../utils')
+const {packageManager} = require('../jsonate')
 
 const args = process.argv.slice(2)
 const parsedArgs = yargsParser(args)
-
-const here = p => path.join(__dirname, p)
-const hereRelative = p => here(p).replace(process.cwd(), '.')
+const {hasProp: hasPkgProp} = packageManager()
 
 const useBuiltinConfig =
   !args.includes('--config') &&
   !hasFile('.prettierrc') &&
   !hasFile('prettier.config.js') &&
-  !hasPkgProp('prettierrc')
+  !hasPkgProp('prettier')
 const config = useBuiltinConfig
-  ? ['--config', hereRelative('../config/prettierrc.js')]
+  ? ['--config', fromConfigs('prettier.config.js')]
   : []
 
 const useBuiltinIgnore =
   !args.includes('--ignore-path') && !hasFile('.prettierignore')
 const ignore = useBuiltinIgnore
-  ? ['--ignore-path', hereRelative('../config/prettierignore')]
+  ? ['--ignore-path', fromConfigs('prettierignore')]
   : []
 
 const write = args.includes('--no-write') ? [] : ['--write']

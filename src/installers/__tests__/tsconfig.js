@@ -56,10 +56,7 @@ Array [
   ~/some/path/to/tsconnfig.json,
   {
   "extends": "./node_modules/easy-scripts/dist/config/tsconfig.json",
-  "include": [
-    "custom-src",
-    "types"
-  ],
+  "include": ["custom-src", "types"],
   "compilerOptions": {
     "declarationDir": "custom-dist"
   }
