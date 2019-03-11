@@ -8,10 +8,8 @@ const {
   print,
 } = require('../utils')
 
-async function lint() {
+function lint() {
   try {
-    await Promise.resolve()
-    // await verifyEslint()
     let args = process.argv.slice(2)
     const parsedArgs = yargsParser(args)
 
