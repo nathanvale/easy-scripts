@@ -1,10 +1,10 @@
-const {hasTypescriptFiles, print} = require('../../utils')
+const {ifTypescriptProject, print} = require('../../utils')
 const {verifyTypescript} = require('../../checkers')
 
 async function build() {
   try {
     let result
-    if (hasTypescriptFiles()) {
+    if (ifTypescriptProject()) {
       await verifyTypescript()
       const useSpecifiedExtensions = process.argv.includes('--extensions')
       if (!useSpecifiedExtensions) {
@@ -17,24 +17,25 @@ async function build() {
       }
     }
     if (process.argv.includes('--bundle')) {
-      result = await require('./rollup')
+      result = require('./rollup').build()
     } else {
       result = require('./babel').build()
-      if (result.status > 0) {
-        print(`Build FAILED :(`)
-      } else {
-        print(`Build Successful :)`)
-      }
+    }
 
-      if (result.status === 0 && hasTypescriptFiles()) {
-        process.argv = []
-        //TODO: move handling of result into build-types.js
-        result = require('../build-types').build()
-        if (result.status > 0) {
-          print(`Building Types FAILED :(`)
-        } else {
-          print(`Build Types Successful :)`)
-        }
+    if (result.status > 0) {
+      print(`Build FAILED :(`)
+    } else {
+      print(`Build Successful :)`)
+    }
+
+    if (result.status === 0 && ifTypescriptProject()) {
+      process.argv = []
+      //TODO: move handling of result into build-types.js
+      result = require('../build-types').build()
+      if (result.status > 0) {
+        print(`Building Types FAILED :(`)
+      } else {
+        print(`Build Types Successful :)`)
       }
     }
   } catch (error) {

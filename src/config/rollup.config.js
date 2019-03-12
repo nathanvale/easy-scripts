@@ -12,17 +12,12 @@ const nodeGlobals = require('rollup-plugin-node-globals')
 const {sizeSnapshot} = require('rollup-plugin-size-snapshot')
 const omit = require('lodash.omit')
 const {packageManager} = require('../jsonate/')
+const {ifTypescriptProject} = require('../utils')
 
+const extensions = ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx']
 const {getState: getPkgState, hasProp: hasPkgProp} = packageManager()
 
-const {
-  hasFile,
-  parseEnv,
-  ifFile,
-  fromRoot,
-  uniq,
-  writeExtraEntry,
-} = require('../utils')
+const {hasFile, parseEnv, fromRoot} = require('../utils')
 
 const pkg = getPkgState().config
 
@@ -54,24 +49,9 @@ const defaultExternal = umd ? peerDeps : deps.concat(peerDeps)
 const input = glob.sync(
   fromRoot(
     process.env.BUILD_INPUT ||
-      ifFile(
-        `src/${format}-entry.js`,
-        `src/${format}-entry.js`,
-        'src/index.js',
-      ),
+      `src/index.${ifTypescriptProject() ? 'ts' : 'js'}`,
   ),
 )
-const codeSplitting = input.length > 1
-
-if (
-  codeSplitting &&
-  uniq(input.map(single => path.basename(single))).length !== input.length
-) {
-  throw new Error(
-    'Filenames of code-splitted entries should be unique to get deterministic output filenames.' +
-      `\nReceived those: ${input}.`,
-  )
-}
 
 const filenameSuffix = process.env.BUILD_FILENAME_SUFFIX || ''
 const filenamePrefix =
@@ -80,6 +60,7 @@ const globals = parseEnv(
   'BUILD_GLOBALS',
   isPreact ? Object.assign(defaultGlobals, {preact: 'preact'}) : defaultGlobals,
 )
+
 const external = parseEnv(
   'BUILD_EXTERNAL',
   isPreact ? defaultExternal.concat(['preact', 'prop-types']) : defaultExternal,
@@ -87,7 +68,7 @@ const external = parseEnv(
 
 if (isPreact) {
   delete globals.react
-  delete globals['prop-types'] // TODO: is this necessary?
+  delete globals['prop-types']
   external.splice(external.indexOf('react'), 1)
 }
 
@@ -95,14 +76,14 @@ const externalPattern = new RegExp(`^(${external.join('|')})($|/)`)
 
 function externalPredicate(id) {
   const isDep = externalPattern.test(id)
+  const isRelative = id.startsWith('.')
   if (umd) {
     // for UMD, we want to bundle all non-peer deps
-    return isDep
+    return !isRelative && !path.isAbsolute(id) && isDep
   }
   // for esm/cjs we want to make all node_modules external
   // TODO: support bundledDependencies if someone needs it ever...
   const isNodeModule = id.includes('node_modules')
-  const isRelative = id.startsWith('.')
   return isDep || (!isRelative && !path.isAbsolute(id)) || isNodeModule
 }
 
@@ -121,9 +102,7 @@ const dirpath = path.join(...[filenamePrefix, 'dist'].filter(Boolean))
 const output = [
   {
     name,
-    ...(codeSplitting
-      ? {dir: path.join(dirpath, format)}
-      : {file: path.join(dirpath, filename)}),
+    file: path.join(dirpath, filename),
     format: esm ? 'es' : format,
     exports: esm ? 'named' : 'auto',
     globals,
@@ -136,7 +115,6 @@ const useBuiltinConfig =
   !hasFile('babel.config.js') &&
   !hasPkgProp('babel')
 const babelPresets = useBuiltinConfig ? [here('../config/babelrc.js')] : []
-
 const replacements = Object.entries(
   umd ? process.env : omit(process.env, ['NODE_ENV']),
 ).reduce((acc, [key, value]) => {
@@ -150,10 +128,9 @@ const replacements = Object.entries(
   return acc
 }, {})
 
-module.exports = {
-  input: codeSplitting ? input : input[0],
+const config = {
+  input: input[0],
   output,
-  experimentalCodeSplitting: codeSplitting,
   external: externalPredicate,
   plugins: [
     isNode ? nodeBuiltIns() : null,
@@ -162,36 +139,21 @@ module.exports = {
       preferBuiltins: isNode,
       jsnext: true,
       main: true,
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      extensions,
     }),
     commonjs({include: 'node_modules/**'}),
     json(),
     rollupBabel({
+      exclude: '/**/node_modules/**',
       presets: babelPresets,
       babelrc: !useBuiltinConfig,
       runtimeHelpers: useBuiltinConfig,
+      extensions,
     }),
     replace(replacements),
     useSizeSnapshot ? sizeSnapshot({printInfo: false}) : null,
     minify ? terser() : null,
-    codeSplitting &&
-      ((writes = 0) => ({
-        onwrite() {
-          if (++writes !== input.length) {
-            return
-          }
-
-          input
-            .filter(single => single.indexOf('index.js') === -1)
-            .forEach(single => {
-              const chunk = path.basename(single)
-
-              writeExtraEntry(chunk.replace(/\..+$/, ''), {
-                cjs: `${dirpath}/cjs/${chunk}`,
-                esm: `${dirpath}/esm/${chunk}`,
-              })
-            })
-        },
-      }))(),
   ].filter(Boolean),
 }
+
+module.exports = config
