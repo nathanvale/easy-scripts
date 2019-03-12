@@ -1,10 +1,10 @@
-const {ifTypescriptProject, print} = require('../../utils')
+const {hasTypescriptFiles, print} = require('../../utils')
 const {verifyTypescript} = require('../../checkers')
 
 async function build() {
   try {
     let result
-    if (ifTypescriptProject()) {
+    if (hasTypescriptFiles()) {
       await verifyTypescript()
       const useSpecifiedExtensions = process.argv.includes('--extensions')
       if (!useSpecifiedExtensions) {
@@ -28,7 +28,7 @@ async function build() {
       print(`Build Successful :)`)
     }
 
-    if (result.status === 0 && ifTypescriptProject()) {
+    if (result.status === 0 && hasTypescriptFiles()) {
       process.argv = []
       //TODO: move handling of result into build-types.js
       result = require('../build-types').build()
