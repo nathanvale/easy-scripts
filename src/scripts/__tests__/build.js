@@ -9,14 +9,14 @@ jest.mock('../../checkers')
 
 expect.addSnapshotSerializer(unquoteSerializer)
 //TODO: add a mock for resolve bin
-let hasTypescriptFiles, crossSpawnSyncMock, verifyTypescriptMock, printMock
+let ifTypescriptProjectMock, crossSpawnSyncMock, verifyTypescriptMock, printMock
 
 cases(
   'build',
   async ({setup = () => () => {}}) => {
     // beforeEach
     jest.resetModules()
-    hasTypescriptFiles = require('../../utils').hasTypescriptFiles
+    ifTypescriptProjectMock = require('../../utils').ifTypescriptProject
     crossSpawnSyncMock = require('cross-spawn').sync
     verifyTypescriptMock = require('../../checkers').verifyTypescript
     printMock = require('../../utils').print
@@ -183,7 +183,7 @@ Call 3:
 
 function withDefault(setupFn) {
   return function setup() {
-    hasTypescriptFiles.mockReturnValue(false)
+    ifTypescriptProjectMock.mockReturnValue(false)
     const teardownFn = setupFn()
     return function teardown() {
       const [firstCall] = crossSpawnSyncMock.mock.calls
@@ -197,7 +197,7 @@ function withDefault(setupFn) {
 
 function withTypescript(setupFn) {
   return function setup() {
-    hasTypescriptFiles.mockReturnValue(true)
+    ifTypescriptProjectMock.mockReturnValue(true)
     const teardownFn = setupFn()
     return function teardown() {
       teardownFn()
@@ -231,24 +231,9 @@ function withTSCArgsAssert(setupFn) {
   }
 }
 
-function withTSArgsCheck(setupFn) {
-  return function setup() {
-    const teardownFn = setupFn()
-    return function teardown() {
-      const [firstCall, secondCall] = crossSpawnSyncMock.mock.calls
-      const [scriptOne, calledArgsOne] = firstCall
-      const [scriptTwo, calledArgsTwo] = secondCall
-      expect(crossSpawnSyncMock).toHaveBeenCalledTimes(2)
-      expect([scriptOne, ...calledArgsOne].join(' ')).toMatchSnapshot()
-      expect([scriptTwo, ...calledArgsTwo].join(' ')).toMatchSnapshot()
-      teardownFn()
-    }
-  }
-}
-
 function withUnverifiedTs(setupFn) {
   return function setup() {
-    hasTypescriptFiles.mockReturnValue(true)
+    ifTypescriptProjectMock.mockReturnValue(true)
     verifyTypescriptMock.mockImplementation(() => {
       throw new Error('Typescript is not setup!')
     })

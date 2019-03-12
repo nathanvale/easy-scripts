@@ -51,7 +51,7 @@ function resolveBin(modName, {executable = modName, cwd = process.cwd()} = {}) {
 
 const fromRoot = (...p) => path.join(getAppDirectory(), ...p)
 const hasFile = (...p) => fs.existsSync(fromRoot(...p))
-const ifFile = (files, t, f) =>
+const ifFile = (files, t = true, f = false) =>
   arrify(files).some(file => hasFile(file)) ? t : f
 
 function parseEnv(name, def) {
@@ -235,7 +235,7 @@ function isDogfooding() {
   return getPkgProp('name') === 'easy-scripts'
 }
 
-function ifTypescriptProject(t, f) {
+function ifTypescriptProject(t = true, f = false) {
   const {hasAnyDep} = packageManager()
   return hasTypescriptFiles() && hasAnyDep('typescript') ? t : f
 }
