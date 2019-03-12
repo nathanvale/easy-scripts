@@ -9,14 +9,14 @@ jest.mock('../../checkers')
 
 expect.addSnapshotSerializer(unquoteSerializer)
 //TODO: add a mock for resolve bin
-let ifTypescriptProjectMock, crossSpawnSyncMock, verifyTypescriptMock, printMock
+let hasTypescriptFilesMock, crossSpawnSyncMock, verifyTypescriptMock, printMock
 
 cases(
   'build',
   async ({setup = () => () => {}}) => {
     // beforeEach
     jest.resetModules()
-    ifTypescriptProjectMock = require('../../utils').ifTypescriptProject
+    hasTypescriptFilesMock = require('../../utils').hasTypescriptFiles
     crossSpawnSyncMock = require('cross-spawn').sync
     verifyTypescriptMock = require('../../checkers').verifyTypescript
     printMock = require('../../utils').print
@@ -183,7 +183,7 @@ Call 3:
 
 function withDefault(setupFn) {
   return function setup() {
-    ifTypescriptProjectMock.mockReturnValue(false)
+    hasTypescriptFilesMock.mockReturnValue(false)
     const teardownFn = setupFn()
     return function teardown() {
       const [firstCall] = crossSpawnSyncMock.mock.calls
@@ -197,7 +197,7 @@ function withDefault(setupFn) {
 
 function withTypescript(setupFn) {
   return function setup() {
-    ifTypescriptProjectMock.mockReturnValue(true)
+    hasTypescriptFilesMock.mockReturnValue(true)
     const teardownFn = setupFn()
     return function teardown() {
       teardownFn()
@@ -233,7 +233,7 @@ function withTSCArgsAssert(setupFn) {
 
 function withUnverifiedTs(setupFn) {
   return function setup() {
-    ifTypescriptProjectMock.mockReturnValue(true)
+    hasTypescriptFilesMock.mockReturnValue(true)
     verifyTypescriptMock.mockImplementation(() => {
       throw new Error('Typescript is not setup!')
     })
