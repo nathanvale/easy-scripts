@@ -1,0 +1,357 @@
+/* your custom css */
+
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditamedium-webfont.eot');
+  src: url('./fonts/gorditamedium-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/gorditamedium-webfont.woff2') format('woff2'),
+    url('./fonts/gorditamedium-webfont.woff') format('woff'),
+    url('./fonts/gorditamedium-webfont.ttf') format('truetype'),
+    url('./fonts/gorditamedium-webfont.svg#gorditamedium') format('svg');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditablack-webfont.eot');
+  src: url('./fonts/gorditablack-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/gorditablack-webfont.woff2') format('woff2'),
+    url('./fonts/gorditablack-webfont.woff') format('woff'),
+    url('./fonts/gorditablack-webfont.ttf') format('truetype'),
+    url('./fonts/gorditablack-webfont.svg#gorditablack') format('svg');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditabold-webfont.eot');
+  src: url('./fonts/gorditabold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/gorditabold-webfont.woff2') format('woff2'),
+    url('./fonts/gorditabold-webfont.woff') format('woff'),
+    url('./fonts/gorditabold-webfont.ttf') format('truetype'),
+    url('./fonts/gorditabold-webfont.svg#gorditabold') format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditamediumitalic-webfont.eot');
+  src: url('./fonts/gorditamediumitalic-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/gorditamediumitalic-webfont.woff2') format('woff2'),
+    url('./fonts/gorditamediumitalic-webfont.woff') format('woff'),
+    url('./fonts/gorditamediumitalic-webfont.ttf') format('truetype'),
+    url('./fonts/gorditamediumitalic-webfont.svg#gorditamedium_italic')
+      format('svg');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditaregular-webfont.eot');
+  src: url('./fonts/gorditaregular-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/gorditaregular-webfont.woff2') format('woff2'),
+    url('./fonts/gorditaregular-webfont.woff') format('woff'),
+    url('./fonts/gorditaregular-webfont.ttf') format('truetype'),
+    url('./fonts/gorditaregular-webfont.svg#gorditaregular') format('svg');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditalight-webfont.eot');
+  src: url('./fonts/gorditalight-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/gorditalight-webfont.woff2') format('woff2'),
+    url('./fonts/gorditalight-webfont.woff') format('woff'),
+    url('./fonts/gorditalight-webfont.ttf') format('truetype'),
+    url('./fonts/gorditalight-webfont.svg#gorditalight') format('svg');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditalightitalic-webfont.eot');
+  src: url('./fonts/gorditalightitalic-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/gorditalightitalic-webfont.woff2') format('woff2'),
+    url('./fonts/gorditalightitalic-webfont.woff') format('woff'),
+    url('./fonts/gorditalightitalic-webfont.ttf') format('truetype'),
+    url('./fonts/gorditalightitalic-webfont.svg#gorditalight_italic')
+      format('svg');
+  font-weight: 200;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditaregularitalic-webfont.eot');
+  src: url('./fonts/gorditaregularitalic-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/gorditaregularitalic-webfont.woff2') format('woff2'),
+    url('./fonts/gorditaregularitalic-webfont.woff') format('woff'),
+    url('./fonts/gorditaregularitalic-webfont.ttf') format('truetype'),
+    url('./fonts/gorditaregularitalic-webfont.svg#gorditaregular_italic')
+      format('svg');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'gordita';
+  src: url('./fonts/gorditabolditalic-webfont.eot');
+  src: url('./fonts/gorditabolditalic-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./fonts/gorditabolditalic-webfont.woff2') format('woff2'),
+    url('./fonts/gorditabolditalic-webfont.woff') format('woff'),
+    url('./fonts/gorditabolditalic-webfont.ttf') format('truetype'),
+    url('./fonts/gorditabolditalic-webfont.svg#gorditabold_italic')
+      format('svg');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+}
+
+@media only screen and (min-width: 1024px) {
+}
+
+@media only screen and (max-width: 1023px) {
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  font-family: $myFont;
+}
+
+body {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #505050;
+}
+
+h1 {
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 40px;
+  color: #232323;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #232323;
+}
+
+h3 {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 28px;
+  color: #232323;
+}
+
+a {
+  color: #505050;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #ec0000;
+  text-decoration: none;
+}
+
+.toc .toggleNav ul li a:hover {
+  color: #ec0000;
+}
+.toc .toggleNav ul li a {
+  text-decoration: none;
+}
+
+.toc .toggleNav ul li.navListItemActive a {
+  color: #ec0000;
+}
+
+.toc .toggleNav .navGroup .navGroupCategoryTitle {
+  color: #393939;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+.navigationSlider .slidingNav ul li a {
+  text-decoration: none;
+  color: black;
+  height: 34px;
+  font-weight: 400;
+}
+
+.navigationSlider .slidingNav ul li.siteNavGroupActive a {
+  background-color: transparent;
+  color: black;
+}
+
+.navigationSlider .slidingNav ul li a:hover {
+  background-color: transparent;
+  color: #ec0000;
+}
+
+.onPageNav a {
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  color: #737373;
+}
+
+.nav-footer .sitemap a {
+  text-decoration: none;
+}
+
+.button {
+  box-sizing: border-box;
+  display: inline-block;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-family: 'gordita', Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid;
+  text-decoration: none;
+  padding: 11px 29px;
+  font-size: 16px;
+  line-height: 24px;
+  background-color: #ec0000;
+  border-color: #ec0000;
+  color: white;
+  text-transform: none;
+  border-radius: 0px;
+}
+
+.button:hover {
+  background-color: #b30100;
+  border-color: #b30100;
+}
+
+.fixedHeaderContainer a {
+  text-decoration: none;
+}
+
+.fixedHeaderContainer {
+  background: white;
+  color: #fff;
+  min-height: 50px;
+  padding: 8px 0;
+  position: fixed;
+  width: 100%;
+  z-index: 9999;
+  transform: translate3d(0, 0, 0);
+  box-sizing: border-box;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(216, 216, 216);
+}
+
+.navPusher {
+  background-color: white;
+}
+
+.fixedHeaderContainer header .headerTitleWithLogo {
+  display: block;
+  /* font-size: 1.25em; */
+  line-height: 21px;
+  padding-left: 5px;
+  margin: 0;
+  position: relative;
+  z-index: 9999;
+}
