@@ -269,23 +269,6 @@ a:hover {
   margin-top: 0;
 }
 
-.navigationSlider .slidingNav ul li a {
-  text-decoration: none;
-  color: black;
-  height: 34px;
-  font-weight: 400;
-}
-
-.navigationSlider .slidingNav ul li.siteNavGroupActive a {
-  background-color: transparent;
-  color: black;
-}
-
-.navigationSlider .slidingNav ul li a:hover {
-  background-color: transparent;
-  color: #ec0000;
-}
-
 .onPageNav a {
   text-decoration: none;
   font-weight: 400;
@@ -328,7 +311,6 @@ a:hover {
 }
 
 .fixedHeaderContainer {
-  background: white;
   color: #fff;
   min-height: 50px;
   padding: 8px 0;
@@ -343,12 +325,16 @@ a:hover {
 }
 
 .navPusher {
-  background-color: white;
+}
+.navigationSlider .slidingNav ul li a {
+  height: 36px;
 }
 
 .fixedHeaderContainer header .headerTitleWithLogo {
   display: block;
-  /* font-size: 1.25em; */
+  font-size: 16px;
+  color: white;
+  font-weight: 400;
   line-height: 21px;
   padding-left: 5px;
   margin: 0;

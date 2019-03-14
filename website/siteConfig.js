@@ -13,8 +13,8 @@ const users = [
   {
     caption: 'User1',
     // You will need to prepend the image path with your baseUrl
-    // if it is not '/', like: '/test-site/img/origin-logo-o-min-no-clear-space.svg'.
-    image: '/img/origin-logo-o-min-no-clear-space.svg',
+    // if it is not '/', like: '/test-site/img/Origin_Logo_Secondary_NOTAB_White_RGB.png'.
+    image: '/img/Origin_Logo_Secondary_NOTAB_White_RGB.png',
     infoLink: 'https://www.facebook.com',
     pinned: true,
   },
@@ -22,7 +22,7 @@ const users = [
 
 const siteConfig = {
   title: 'Origin Scripts', // Title for your website.
-  tagline: 'A website for testing',
+  tagline: 'A CLI toolbox for common scripts',
   url: 'https://your-docusaurus-test-site.com', // Your website URL
   baseUrl: '/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
@@ -47,14 +47,14 @@ const siteConfig = {
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/origin-logo-o-min-no-clear-space.svg',
-  footerIcon: 'img/origin-logo-o-min-no-clear-space.svg',
+  headerIcon: 'img/Origin_Logo_Secondary_NOTAB_White_RGB.png',
+  footerIcon: 'img/Origin_Logo_Secondary_NOTAB_White_RGB.png',
   favicon: 'img/favicon.png',
 
   /* Colors for website */
   colors: {
-    primaryColor: '#2E8555',
-    secondaryColor: '#205C3B',
+    primaryColor: '#3f75c6',
+    secondaryColor: '#fa4616',
   },
 
   /* Custom fonts for website */
