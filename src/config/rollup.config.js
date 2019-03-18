@@ -17,7 +17,12 @@ const {ifTypescriptProject} = require('../utils')
 const extensions = ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx']
 const {getState: getPkgState, hasProp: hasPkgProp} = packageManager()
 
-const {hasFile, parseEnv, fromRoot} = require('../utils')
+const {
+  useBuiltInBabelConfig,
+  parseEnv,
+  fromRoot,
+  fromConfigs,
+} = require('../utils')
 
 const pkg = getPkgState().config
 
@@ -108,13 +113,9 @@ const output = [
     globals,
   },
 ]
-
-const useBuiltinConfig =
-  !hasFile('.babelrc') &&
-  !hasFile('.babelrc.js') &&
-  !hasFile('babel.config.js') &&
-  !hasPkgProp('babel')
-const babelPresets = useBuiltinConfig ? [here('../config/babelrc.js')] : []
+const args = process.argv.slice(2)
+const useBuiltinConfig = useBuiltInBabelConfig(args)
+const babelPresets = useBuiltinConfig ? [fromConfigs('babelrc.js')] : []
 const replacements = Object.entries(
   umd ? process.env : omit(process.env, ['NODE_ENV']),
 ).reduce((acc, [key, value]) => {
@@ -147,7 +148,7 @@ const config = {
       exclude: '/**/node_modules/**',
       presets: babelPresets,
       babelrc: !useBuiltinConfig,
-      runtimeHelpers: useBuiltinConfig,
+      runtimeHelpers: true,
       extensions,
     }),
     replace(replacements),

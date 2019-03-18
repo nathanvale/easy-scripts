@@ -23,9 +23,6 @@ const treeshake = parseEnv('BUILD_TREESHAKE', isRollup || isWebpack)
 
 if (!isMonorepo && !treeshake && !hasBabelRuntimeDep) {
   throw new Error(RUNTIME_HELPERS_WARN)
-  //TODO: offer to install it
-} else if (treeshake && !isMonorepo && !isUMD && !hasBabelRuntimeDep) {
-  print(RUNTIME_HELPERS_WARN)
 }
 
 /**
@@ -61,7 +58,12 @@ module.exports = () => ({
   plugins: [
     [
       require.resolve('@babel/plugin-transform-runtime'),
-      {useESModules: treeshake && !isCJS},
+      {
+        corejs: false,
+        helpers: true,
+        regenerator: true,
+        useESModules: treeshake && !isCJS,
+      },
     ],
     require.resolve('babel-plugin-macros'),
     alias
