@@ -1,7 +1,7 @@
 const browserslist = require('browserslist')
 const semver = require('semver')
 const {packageManager} = require('../jsonate/')
-const {parseEnv, getAppDirectory, print} = require('../utils')
+const {parseEnv, getAppDirectory} = require('../utils')
 
 const {BABEL_ENV, NODE_ENV, BUILD_FORMAT} = process.env
 const {ifAnyDep, getState: getPkgState} = packageManager()
