@@ -3762,10 +3762,10 @@ escodegen@^1.9.1:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-nathanvale@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/eslint-config-nathanvale/-/eslint-config-nathanvale-1.0.2.tgz#e6bb5a8fda335f296037fa8439876e9a6fb43d39"
-  integrity sha512-5xoOlcXcf+6n7HuCuDfRJVmiTbZUCeXjrYIRp5rqKqu8bn0+fVKn+WRTYntd0jSyKzQSUKfB1u0/7lGDH2ZcIw==
+eslint-config-nathanvale@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/eslint-config-nathanvale/-/eslint-config-nathanvale-1.0.3.tgz#a4fb8f8acefa134d9927c50d0675dac8c841de6d"
+  integrity sha512-g1agSI+h+zAgp273iLocjJVWQk8wUvmsBWjl9lCvQD4ncFP3+iPc8nTzh2+wjw4aBIIZBS3a3PR4rQ1k2we4GA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^1.4.2"
     "@typescript-eslint/parser" "^1.4.2"
