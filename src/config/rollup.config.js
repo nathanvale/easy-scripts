@@ -15,7 +15,7 @@ const {packageManager} = require('../jsonate/')
 const {ifTypescriptProject} = require('../utils')
 
 const extensions = ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx']
-const {getState: getPkgState, hasProp: hasPkgProp} = packageManager()
+const {getState: getPkgState} = packageManager()
 
 const {
   useBuiltInBabelConfig,
@@ -26,7 +26,6 @@ const {
 
 const pkg = getPkgState().config
 
-const here = p => path.join(__dirname, p)
 const capitalize = s => s[0].toUpperCase() + s.slice(1)
 
 const minify = parseEnv('BUILD_MINIFY', false)
