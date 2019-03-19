@@ -41,7 +41,13 @@ function lint() {
       // we need to take all the flag-less arguments (the files that should be linted)
       // and filter out the ones that aren't js files. Otherwise json or css files
       // may be passed through
-      args = args.filter(a => !parsedArgs._.includes(a) || a.endsWith('.js'))
+      args = args.filter(
+        a =>
+          !parsedArgs._.includes(a) ||
+          a.endsWith('.js') ||
+          a.endsWith('.ts') ||
+          a.endsWith('.tsx'),
+      )
     }
 
     const result = spawn.sync(
@@ -55,6 +61,9 @@ function lint() {
     } else {
       print(`Linting Successful :)`)
     }
+    // We have to process exit here for lintstaged
+    // eslint-disable-next-line no-process-exit
+    process.exit(result.status)
   } catch (error) {
     print(`Linting FAILED :(`)
     print(error)

@@ -8,7 +8,7 @@ jest.mock('../../utils')
 expect.addSnapshotSerializer(unquoteSerializer)
 expect.addSnapshotSerializer(winPathSerializer)
 
-let crossSpawnSyncMock, originalArgv, printMock
+let crossSpawnSyncMock, originalArgv, printMock, originalExit
 
 cases(
   'lint',
@@ -16,7 +16,9 @@ cases(
     // beforeEach
     jest.resetModules()
     crossSpawnSyncMock = require('cross-spawn').sync
+    originalExit = process.exit
     printMock = require('../../utils').print
+    process.exit = jest.fn()
     const teardown = await setup()
     try {
       // tests
@@ -25,6 +27,7 @@ cases(
     } catch (error) {
       throw error
     } finally {
+      process.exit = originalExit
       await teardown()
     }
   },
@@ -44,13 +47,14 @@ cases(
     '--no-cache will disable caching': {
       setup: withDefault(setupWithArgs(['--no-cache'])),
     },
-    'runs on given files, but only js files': {
+    'runs on given files, but only js,ts,tsx files': {
       setup: withDefault(
         setupWithArgs([
           './src/index.js',
+          './src/index.ts',
+          './src/index.tsx',
           './package.json',
           './src/index.css',
-          './src/component.js',
         ]),
       ),
     },

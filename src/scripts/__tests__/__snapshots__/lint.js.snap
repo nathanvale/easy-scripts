@@ -4,7 +4,7 @@ exports[`lint --no-cache will disable caching 1`] = `eslint --no-cache --ext .js
 
 exports[`lint calls eslint CLI with default args 1`] = `eslint --cache --ext .js,.jsx,.ts,.tsx .`;
 
-exports[`lint runs on given files, but only js files 1`] = `eslint --cache ./src/index.js ./src/component.js --ext .js,.jsx,.ts,.tsx`;
+exports[`lint runs on given files, but only js,ts,tsx files 1`] = `eslint --cache ./src/index.js ./src/index.ts ./src/index.tsx --ext .js,.jsx,.ts,.tsx`;
 
 exports[`lint should compile files with --config and --ignore-path when using built in configs 1`] = `eslint --config ~/src/config/eslintrc.js --ignore-path ~/src/config/eslintignore --cache --ext .js,.jsx,.ts,.tsx .`;
 
