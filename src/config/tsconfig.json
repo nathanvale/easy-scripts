@@ -15,6 +15,15 @@
     "pretty": true,
     "strict": true,
     "strictNullChecks": true,
-    "stripInternal": true
+    "stripInternal": true,
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve"
   }
 }
