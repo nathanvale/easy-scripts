@@ -3762,10 +3762,10 @@ escodegen@^1.9.1:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-nathanvale@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/eslint-config-nathanvale/-/eslint-config-nathanvale-1.0.4.tgz#7f570b3b15c3f1e41af194695e32c911182b1474"
-  integrity sha512-OtEhuo2IAd6tYNz8u8PJx5t5N4xfTrN2eIy+vzW/Q50Gr7XyeDRgdm9uJzJhgrlYlvUyzqleicQQZ/Ymecm+JA==
+eslint-config-nathanvale@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/eslint-config-nathanvale/-/eslint-config-nathanvale-1.0.5.tgz#3de6cac8e071e6597d4b81f73b4ee9525908df70"
+  integrity sha512-q1YSbA9mPIGLsHdGkxWIQxadc1CbkTGGKATE4Pdlq2GKHPvTOz8NfJ/A4NIXjuCW14pEmFiNFsMUe8pSh9OncQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^1.4.2"
     "@typescript-eslint/parser" "^1.4.2"
@@ -3914,10 +3914,10 @@ eslint-visitor-keys@^1.0.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
   integrity sha512-qzm/XxIbxm/FHyH341ZrbnMUpe+5Bocte9xkmFMzPMjRaZMcXww+MpBptFvtU+79L362nqiLhekCxCxDPaUMBQ==
 
-eslint@^5.15.2:
-  version "5.15.2"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.15.2.tgz#0237bbb2362f89f4effef2f191eb0fea5279c0a5"
-  integrity sha512-I8VM4SILpMwUvsRt83bQVwIRQAJ2iPMXun1FVZ/lV1OHklH2tJaXqoDnNzdiFc6bnCtGKXvQIQNP3kj1eMskSw==
+eslint@^5.15.0:
+  version "5.15.3"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.15.3.tgz#c79c3909dc8a7fa3714fb340c11e30fd2526b8b5"
+  integrity sha512-vMGi0PjCHSokZxE0NLp2VneGw5sio7SSiDNgIUn2tC0XkWJRNOIoHIg3CliLVfXnJsiHxGAYrkw0PieAu8+KYQ==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.9.1"
