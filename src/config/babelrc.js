@@ -80,6 +80,7 @@ module.exports = () => ({
       ? require.resolve('babel-plugin-transform-inline-environment-variables')
       : null,
     [require.resolve('@babel/plugin-proposal-class-properties'), {loose: true}],
+    require.resolve('@babel/plugin-syntax-dynamic-import'),
     require.resolve('babel-plugin-minify-dead-code-elimination'),
     treeshake
       ? null
