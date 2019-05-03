@@ -1,5 +1,5 @@
 const path = require('path')
-const {hasFile, fromRoot} = require('../utils')
+const {hasFile, fromRoot, isDogfooding} = require('../utils')
 const {packageManager} = require('../jsonate/')
 
 const {ifAnyDep, hasProp: hasPkgProp} = packageManager()
@@ -21,7 +21,11 @@ const ignores = [
 
 const jestConfig = {
   roots: [fromRoot('src')],
-  transform: {'^.+\\.(ts|tsx|js|jsx)$': 'babel-jest'},
+  transform: {
+    '^.+\\.(ts|tsx|js|jsx)$': isDogfooding
+      ? 'babel-jest'
+      : '<rootDir>node_modules/easy-scripts/node_modules/babel-jest',
+  },
   testEnvironment: ifAnyDep(['webpack', 'rollup', 'react'], 'jsdom', 'node'),
   testURL: 'http://localhost',
   moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
