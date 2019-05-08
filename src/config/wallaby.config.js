@@ -26,7 +26,7 @@ module.exports = function(wallaby) {
     tests,
     compilers: {
       '**/*.{js,ts,tsx}': wallaby.compilers.babel({
-        babelrc: false,
+        babelrc: true,
         ...babelrc,
       }),
     },
