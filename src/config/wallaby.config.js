@@ -5,6 +5,7 @@ const jestConfig = require('./jest.config')
 const babelrc = require('./babelrc')()
 
 const files = [
+  '.env',
   './src/**/*.json',
   ...jestConfig.collectCoverageFrom,
   ...jestConfig.testMatch.map(file => `!${file}`),
