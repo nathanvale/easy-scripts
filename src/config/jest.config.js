@@ -9,7 +9,7 @@ const here = p => path.join(__dirname, p)
 const useBuiltInBabelConfig =
   !hasFile('.babelrc') &&
   !hasFile('.babelrc.js') &&
-  !hasFile('.babel.config.js') &&
+  !hasFile('babel.config.js') &&
   !hasPkgProp('babel')
 
 const ignores = [
@@ -17,11 +17,12 @@ const ignores = [
   '/fixtures/',
   '/__tests__/helpers/',
   '__mocks__',
+  'dist',
 ]
 
 const jestConfig = {
   roots: [fromRoot('src')],
-  transform: {'^.+\\.(ts|tsx|js|jsx)$': '<rootDir>/node_modules/babel-jest'},
+  transform: {'^.+\\.(ts|tsx|js|jsx)$': 'babel-jest'},
   testEnvironment: ifAnyDep(['webpack', 'rollup', 'react'], 'jsdom', 'node'),
   testURL: 'http://localhost',
   moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
@@ -37,6 +38,9 @@ const jestConfig = {
       lines: 80,
       statements: 80,
     },
+  },
+  globals: {
+    __DEV__: false,
   },
 }
 

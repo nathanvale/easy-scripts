@@ -58,6 +58,8 @@ function lint() {
 
     if (result.status > 0) {
       print(`Linting FAILED :(`)
+      // eslint-disable-next-line no-process-exit
+      process.exit(1)
     } else {
       print(`Linting Successful :)`)
     }
@@ -67,6 +69,8 @@ function lint() {
   } catch (error) {
     print(`Linting FAILED :(`)
     print(error)
+    // eslint-disable-next-line no-process-exit
+    process.exit(1)
   }
 }
 

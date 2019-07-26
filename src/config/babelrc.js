@@ -1,7 +1,7 @@
 const browserslist = require('browserslist')
 const semver = require('semver')
 const {packageManager} = require('../jsonate/')
-const {parseEnv, getAppDirectory} = require('../utils')
+const {parseEnv, getAppDirectory, hasTypescriptFiles} = require('../utils')
 
 const {BABEL_ENV, NODE_ENV, BUILD_FORMAT} = process.env
 const {ifAnyDep, getState: getPkgState} = packageManager()
@@ -31,8 +31,17 @@ if (!isMonorepo && !treeshake && !hasBabelRuntimeDep) {
  * @see https://github.com/browserslist/browserslist/blob/master/node.js#L139
  */
 const browsersConfig = browserslist.loadConfig({path: getAppDirectory()}) || [
-  'ie 10',
-  'ios 7',
+  'last 7 Chrome version',
+  'last 7 Firefox version',
+  'last 2 Edge version',
+  'last 1 Safari version',
+  'last 1 Android version',
+  'last 1 ChromeAndroid version',
+  'last 1 FirefoxAndroid version',
+  'last 1 iOS version',
+  'last 2 Samsung version',
+  // hope we get to delete the following line one day!
+  'IE >= 11',
 ]
 
 const envTargets = isTest
@@ -52,8 +61,9 @@ module.exports = () => ({
         {pragma: isPreact ? 'React.h' : undefined},
       ],
     ),
-    ifAnyDep(['flow-bin'], [require.resolve('@babel/preset-flow')]),
-    ifAnyDep(['typescript'], [require.resolve('@babel/preset-typescript')]),
+    hasTypescriptFiles()
+      ? [require.resolve('@babel/preset-typescript')]
+      : false,
   ].filter(Boolean),
   plugins: [
     [
@@ -79,6 +89,12 @@ module.exports = () => ({
     isUMD
       ? require.resolve('babel-plugin-transform-inline-environment-variables')
       : null,
+    [
+      require.resolve('babel-plugin-styled-components'),
+      {
+        uglifyPure: true,
+      },
+    ],
     [require.resolve('@babel/plugin-proposal-class-properties'), {loose: true}],
     require.resolve('@babel/plugin-syntax-dynamic-import'),
     require.resolve('babel-plugin-minify-dead-code-elimination'),

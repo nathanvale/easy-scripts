@@ -236,8 +236,12 @@ function isDogfooding() {
 }
 
 function ifTypescriptProject(t = true, f = false) {
-  const {hasAnyDep} = packageManager()
-  return hasTypescriptFiles() && hasAnyDep('typescript') ? t : f
+  return hasTypescriptFiles() ? t : f
+}
+
+function printStage(stage) {
+  // eslint-disable-next-line no-console
+  console.info(`\n===> ${stage} <===\n`)
 }
 
 module.exports = {
@@ -257,6 +261,7 @@ module.exports = {
   isOptedOut,
   parseEnv,
   print,
+  printStage,
   resolveBin,
   resolveNdvScripts,
   uniq,

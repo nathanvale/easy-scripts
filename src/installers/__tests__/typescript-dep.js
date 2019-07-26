@@ -21,7 +21,7 @@ it('should return false when the user does not want a tsconfig.json file created
   promptsMock.mockImplementationOnce(() => ({shouldCreate: false}))
   const {installTypescriptDep} = require('../typescript-dep')
   const result = await installTypescriptDep()
-  expect(result).toBeFalsy()
+  expect(result).toBe(false)
   expect(promptsMock).toHaveBeenCalledTimes(1)
   expect(printMock.mock.calls[0]).toMatchInlineSnapshot(`
 Array [
@@ -45,7 +45,7 @@ it('should return true and write to a file when the user asks to have a tsconfig
 
   const {installTypescriptDep} = require('../typescript-dep')
   const result = await installTypescriptDep()
-  expect(result).toBeTruthy()
+  expect(result).toBe(true)
   expect(reloadMock).toBeCalledTimes(1)
   expect(execCmdMock).toHaveBeenCalledTimes(1)
   expect(execCmdMock.mock.calls[0]).toMatchInlineSnapshot(`

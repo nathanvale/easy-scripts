@@ -30,7 +30,9 @@ const scripts = useDefaultScripts
 const result = spawn.sync(
   resolveBin('concurrently'),
   getConcurrentlyArgs(scripts),
-  {stdio: 'inherit'},
+  {
+    stdio: 'inherit',
+  },
 )
 
 // eslint-disable-next-line no-process-exit

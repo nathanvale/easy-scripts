@@ -38,8 +38,8 @@ describe('tsConfigManager', () => {
     const tsConfigMock = tsConfigManagerMock({
       initialState: {config: {compilerOptions: {module: 'commonjs'}}},
     })
-    expect(tsConfigMock.hasCompilerOption('module')).toBeTruthy()
-    expect(tsConfigMock.hasCompilerOption('name')).toBeFalsy()
+    expect(tsConfigMock.hasCompilerOption('module')).toBe(true)
+    expect(tsConfigMock.hasCompilerOption('name')).toBe(false)
   })
 
   test('can get files', () => {
@@ -96,44 +96,44 @@ Object {
         },
       },
     })
-    expect(packageJSONMock.hasAnyDep('styled-components')).toBeTruthy()
-    expect(packageJSONMock.hasAnyDep('jest')).toBeTruthy()
-    expect(packageJSONMock.hasAnyDep('arrify')).toBeTruthy()
-    expect(packageJSONMock.hasAnyDep('angular')).toBeFalsy()
+    expect(packageJSONMock.hasAnyDep('styled-components')).toBe(true)
+    expect(packageJSONMock.hasAnyDep('jest')).toBe(true)
+    expect(packageJSONMock.hasAnyDep('arrify')).toBe(true)
+    expect(packageJSONMock.hasAnyDep('angular')).toBe(false)
   })
 
   test('returns true if hasDep', () => {
     const packageJSONMock = packageManagerMock({
       initialState: {config: {dependencies: {arrify: '*', react: '*'}}},
     })
-    expect(packageJSONMock.hasDep(['arrify', 'react'])).toBeTruthy()
-    expect(packageJSONMock.hasDep(['arrify'])).toBeTruthy()
-    expect(packageJSONMock.hasDep('arrify')).toBeTruthy()
-    expect(packageJSONMock.hasDep('angular')).toBeFalsy()
+    expect(packageJSONMock.hasDep(['arrify', 'react'])).toBe(true)
+    expect(packageJSONMock.hasDep(['arrify'])).toBe(true)
+    expect(packageJSONMock.hasDep('arrify')).toBe(true)
+    expect(packageJSONMock.hasDep('angular')).toBe(false)
   })
 
   test('returns true if hasDevDep', () => {
     const packageJSONMock = packageManagerMock({
       initialState: {config: {devDependencies: {jest: '*'}}},
     })
-    expect(packageJSONMock.hasDevDep('jest')).toBeTruthy()
-    expect(packageJSONMock.hasDevDep('react')).toBeFalsy()
+    expect(packageJSONMock.hasDevDep('jest')).toBe(true)
+    expect(packageJSONMock.hasDevDep('react')).toBe(false)
   })
 
   test('returns true if hasPeerDep', () => {
     const packageJSONMock = packageManagerMock({
       initialState: {config: {peerDependencies: {jest: '*'}}},
     })
-    expect(packageJSONMock.hasPeerDep('jest')).toBeTruthy()
-    expect(packageJSONMock.hasPeerDep('react')).toBeFalsy()
+    expect(packageJSONMock.hasPeerDep('jest')).toBe(true)
+    expect(packageJSONMock.hasPeerDep('react')).toBe(false)
   })
 
   test('returns true if hasScript', () => {
     const packageJSONMock = packageManagerMock({
       initialState: {config: {scripts: {test: 'jest'}}},
     })
-    expect(packageJSONMock.hasScript('test')).toBeTruthy()
-    expect(packageJSONMock.hasScript('start')).toBeFalsy()
+    expect(packageJSONMock.hasScript('test')).toBe(true)
+    expect(packageJSONMock.hasScript('start')).toBe(false)
   })
 
   test('returns true ifAnyDep', () => {
@@ -261,8 +261,8 @@ Object {
 
     test('returns true if a prop exists', () => {
       const jsonMock = mockManager({initialState: {config: {name: 'test'}}})
-      expect(jsonMock.hasProp('name')).toBeTruthy()
-      expect(jsonMock.hasProp('test')).toBeFalsy()
+      expect(jsonMock.hasProp('name')).toBe(true)
+      expect(jsonMock.hasProp('test')).toBe(false)
     })
 
     test('throws an error when accessing a prop on an onloaded config', () => {
@@ -279,8 +279,8 @@ Object {
       const jsonMock = mockManager({
         initialState: {config: {dependencies: {react: '*'}}},
       })
-      expect(jsonMock.hasSubProp('dependencies')('react')).toBeTruthy()
-      expect(jsonMock.hasSubProp('dependencies')('angular')).toBeFalsy()
+      expect(jsonMock.hasSubProp('dependencies')('react')).toBe(true)
+      expect(jsonMock.hasSubProp('dependencies')('angular')).toBe(false)
     })
 
     test('ifSubProp returns the true argument if true and false argument if false', () => {
@@ -382,7 +382,7 @@ Object {
     test('has access to previous state', () => {
       const mock = mockManager()
       mock.setState(prev => ({...prev, isLoaded: !prev.isLoaded}))
-      expect(mock.getState().isLoaded).toBeFalsy()
+      expect(mock.getState().isLoaded).toBe(false)
     })
   })
 }

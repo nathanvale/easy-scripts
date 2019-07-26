@@ -23,7 +23,9 @@ const config = useBuiltInConfig
 const lintStagedResult = spawn.sync(
   resolveBin('lint-staged'),
   [...config, ...args],
-  {stdio: 'inherit'},
+  {
+    stdio: 'inherit',
+  },
 )
 
 if (lintStagedResult.status !== 0 || !isOptedIn('pre-commit')) {
