@@ -6,7 +6,9 @@ function build() {
   const tscResult = spawn.sync(
     resolveBin('tsc'),
     ['--emitDeclarationOnly', ...args],
-    {stdio: 'inherit'},
+    {
+      stdio: 'inherit',
+    },
   )
   return tscResult
 }

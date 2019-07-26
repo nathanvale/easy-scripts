@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`build library tsc should generate types with the correct args 1`] = `tsc --emitDeclarationOnly`;
+
+exports[`build library with babel should compile files to a specified --out-dir 1`] = `babel --copy-files --ignore **/__tests__/**,**/__mocks__/** src --out-dir`;
+
+exports[`build library with babel should compile files with --presets when using a built in config 1`] = `babel --out-dir dist --presets ~/src/config/babelrc.js --copy-files --ignore **/__tests__/**,**/__mocks__/** src`;
+
+exports[`build library with babel should ignore files set with --ignore 1`] = `babel --out-dir dist --copy-files src --ignore somefile.js`;
+
+exports[`build library with babel should not copy files with --no-copy-files 1`] = `babel --out-dir dist --ignore **/__tests__/**,**/__mocks__/** src --no-copy-files`;
+
+exports[`build library with babel should use default args 1`] = `babel --out-dir dist --copy-files --ignore **/__tests__/**,**/__mocks__/** src`;
+
+exports[`build library with typescript and no specified extenstions should also compile .ts,.tsx files 1`] = `babel --out-dir dist --copy-files --ignore **/__tests__/**,**/__mocks__/** src --extensions .es6,.es,.jsx,.js,.mjs,.ts,.tsx --source-maps inline`;
+
+exports[`build library with typescript and specified --extensions should only compile specified --extensions 1`] = `babel --out-dir dist --copy-files --ignore **/__tests__/**,**/__mocks__/** src --extensions .ts --source-maps inline`;
+
+exports[`build library with typescript and specified --source-maps should only compile specified --source-maps 1`] = `babel --out-dir dist --copy-files --ignore **/__tests__/**,**/__mocks__/** src --source-maps --extensions .es6,.es,.jsx,.js,.mjs,.ts,.tsx`;

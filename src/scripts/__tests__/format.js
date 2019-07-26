@@ -1,13 +1,20 @@
 import cases from 'jest-in-case'
 import {unquoteSerializer, winPathSerializer} from '../../helpers/serializers'
 
+jest.mock('../../utils')
+
 expect.addSnapshotSerializer(unquoteSerializer)
 expect.addSnapshotSerializer(winPathSerializer)
+
+let fromConfigsMock
 
 cases(
   'format',
   ({args}) => {
     // beforeEach
+    jest.resetModules()
+    fromConfigsMock = require('../../utils').fromConfigs
+    fromConfigsMock.mockReturnValue('path/to/some/config.js')
     const {sync: crossSpawnSyncMock} = require('cross-spawn')
     const originalExit = process.exit
     const originalArgv = process.argv
@@ -26,7 +33,6 @@ cases(
     // afterEach
     process.exit = originalExit
     process.argv = originalArgv
-    jest.resetModules()
   },
   {
     'calls prettier CLI with args': {

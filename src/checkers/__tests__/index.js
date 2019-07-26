@@ -16,7 +16,6 @@ beforeEach(() => {
 it('check4TypescriptDep returns an uninstalled object', () => {
   const {check4TypescriptDep} = require('../')
   const result = check4TypescriptDep()
-  expect(result).toBeTruthy()
   expect(result).toMatchInlineSnapshot(`
 Object {
   "error": "Typescript has not been installed as a dependency of this project.",

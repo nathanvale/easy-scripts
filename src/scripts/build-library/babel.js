@@ -4,7 +4,6 @@ const {
   fromRoot,
   fromConfigs,
   resolveBin,
-  print,
   useBuiltInBabelConfig,
 } = require('../../utils')
 
@@ -15,10 +14,9 @@ function build() {
   const config = useBuiltinConfig
     ? ['--presets', fromConfigs('babelrc.js')]
     : []
+  const builtInIgnore = '**/__tests__/**,**/__mocks__/**'
 
-  const ignore = args.includes('--ignore')
-    ? []
-    : ['--ignore', '__tests__,__mocks__']
+  const ignore = args.includes('--ignore') ? [] : ['--ignore', builtInIgnore]
 
   const copyFiles = args.includes('--no-copy-files') ? [] : ['--copy-files']
   const useSpecifiedOutDir = args.includes('--out-dir')
@@ -36,14 +34,12 @@ function build() {
     'src',
   ].concat(args)
 
-  print(
-    `Proceeding to build files with babel args:\n\n${finalArgs.join(' ')}\n`,
-  )
-
   const result = spawn.sync(
     resolveBin('@babel/cli', {executable: 'babel'}),
     finalArgs,
-    {stdio: 'inherit'},
+    {
+      stdio: 'inherit',
+    },
   )
 
   return result

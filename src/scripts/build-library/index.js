@@ -1,11 +1,11 @@
+/* eslint-disable no-useless-escape */
 const {hasTypescriptFiles, print} = require('../../utils')
-const {verifyTypescript} = require('../../checkers')
 
-async function build() {
+function build() {
   try {
     let result
     if (hasTypescriptFiles()) {
-      await verifyTypescript()
+      //await verifyTypescript()
       const useSpecifiedExtensions = process.argv.includes('--extensions')
       if (!useSpecifiedExtensions) {
         const extensions = ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx']
@@ -23,9 +23,9 @@ async function build() {
     }
 
     if (result.status > 0) {
-      print(`Build FAILED :(`)
-    } else {
-      print(`Build Successful :)`)
+      print(`Build FAILED ¯\_(ツ)_/¯`)
+      // eslint-disable-next-line no-process-exit
+      process.exit(1)
     }
 
     if (result.status === 0 && hasTypescriptFiles()) {
@@ -33,13 +33,15 @@ async function build() {
       //TODO: move handling of result into build-types.js
       result = require('../build-types').build()
       if (result.status > 0) {
-        print(`Building Types FAILED :(`)
+        print(`Compiling type declarations FAILED ¯\_(ツ)_/¯`)
+        // eslint-disable-next-line no-process-exit
+        process.exit(1)
       } else {
-        print(`Build Types Successful :)`)
+        print(`Successfully compiled type declarations.`)
       }
     }
   } catch (error) {
-    print(`Build FAILED :(`)
+    print(`Build FAILED ¯\_(ツ)_/¯`)
     print(error)
   }
 }

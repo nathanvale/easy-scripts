@@ -12,21 +12,24 @@ expect.addSnapshotSerializer(unquoteSerializer)
 let hasTypescriptFilesMock, crossSpawnSyncMock, verifyTypescriptMock, printMock
 
 cases(
-  'build',
+  'build library',
   async ({setup = () => () => {}}) => {
     // beforeEach
     jest.resetModules()
+    const originalExit = process.exit
+    process.exit = jest.fn()
     hasTypescriptFilesMock = require('../../utils').hasTypescriptFiles
     crossSpawnSyncMock = require('cross-spawn').sync
     verifyTypescriptMock = require('../../checkers').verifyTypescript
     printMock = require('../../utils').print
     const teardown = await setup()
     try {
-      await require('../build')
+      await require('../build-library')
       // eslint-disable-next-line no-useless-catch
     } catch (error) {
       throw error
     } finally {
+      process.exit = originalExit
       await teardown()
     }
   },
@@ -111,19 +114,13 @@ function withThrownError(setupFn) {
     printMock.mockClear()
     return function teardown() {
       expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
-Call 1:
-  Argument 1:
-    Proceeding to build files with babel args:
-
---out-dir dist --copy-files --ignore __tests__,__mocks__ src
-
-Call 2:
-  Argument 1:
-    Build FAILED :(
-Call 3:
-  Argument 1:
-    Error: some crazy error
-`)
+        Call 1:
+          Argument 1:
+            Build FAILED ¯_(ツ)_/¯
+        Call 2:
+          Argument 1:
+            Error: some crazy error
+      `)
       teardownFn()
     }
   }
@@ -137,16 +134,10 @@ function withBabelFail(setupFn) {
     const teardownFn = setupFn()
     return function teardown() {
       expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
-Call 1:
-  Argument 1:
-    Proceeding to build files with babel args:
-
---out-dir dist --copy-files --ignore __tests__,__mocks__ src
-
-Call 2:
-  Argument 1:
-    Build FAILED :(
-`)
+        Call 1:
+          Argument 1:
+            Build FAILED ¯_(ツ)_/¯
+      `)
       teardownFn()
     }
   }
@@ -163,19 +154,10 @@ function withBuildTypesFail(setupFn) {
     const teardownFn = setupFn()
     return function teardown() {
       expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
-Call 1:
-  Argument 1:
-    Proceeding to build files with babel args:
-
---out-dir dist --copy-files --ignore __tests__,__mocks__ src --source-maps --extensions .es6,.es,.jsx,.js,.mjs,.ts,.tsx
-
-Call 2:
-  Argument 1:
-    Build Successful :)
-Call 3:
-  Argument 1:
-    Building Types FAILED :(
-`)
+        Call 1:
+          Argument 1:
+            Compiling type declarations FAILED ¯_(ツ)_/¯
+      `)
       teardownFn()
     }
   }
@@ -240,13 +222,10 @@ function withUnverifiedTs(setupFn) {
     const teardownFn = setupFn()
     return function teardown() {
       expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
-Call 1:
-  Argument 1:
-    Build FAILED :(
-Call 2:
-  Argument 1:
-    Error: Typescript is not setup!
-`)
+        Call 1:
+          Argument 1:
+            Successfully compiled type declarations.
+      `)
       teardownFn()
     }
   }

@@ -27,12 +27,14 @@ Array [
 Usage: ../ [script] [--flags]
 
 Available Scripts:
-  build
+  build-library
   build-types
+  build
+  clean
   commitlint
-  contributors
   format
   lint
+  postinstall
   pre-commit
   test
   type-check-watch

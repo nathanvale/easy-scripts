@@ -20,23 +20,23 @@ it('should return false when the user does not want a tsconfig.json file created
   promptsMock.mockImplementationOnce(() => ({shouldCreate: false}))
   const {installTsConfig} = require('../tsconfig')
   const result = await installTsConfig()
-  expect(result).toBeFalsy()
+  expect(result).toBe(false)
   expect(promptsMock).toHaveBeenCalledTimes(1)
   expect(printMock.mock.calls[0]).toMatchInlineSnapshot(`
-Array [
-  WARNING: Missing tsconfig.json!,
-]
-`)
+    Array [
+      WARNING: Missing tsconfig.json!,
+    ]
+  `)
   expect(promptsMock.mock.calls[0]).toMatchInlineSnapshot(`
-Array [
-  Object {
-    initial: true,
-    message: Create a tsconfig.json?,
-    name: shouldCreate,
-    type: confirm,
-  },
-]
-`)
+    Array [
+      Object {
+        initial: true,
+        message: Create a tsconfig.json?,
+        name: shouldCreate,
+        type: confirm,
+      },
+    ]
+  `)
 })
 
 it('should return true and write to a file when the user asks to have a tsconfig.json created for them', async () => {
@@ -49,47 +49,47 @@ it('should return true and write to a file when the user asks to have a tsconfig
 
   const {installTsConfig} = require('../tsconfig')
   const result = await installTsConfig()
-  expect(result).toBeTruthy()
+  expect(result).toBe(true)
   expect(writeFileSyncMock).toHaveBeenCalledTimes(1)
   expect(writeFileSyncMock.mock.calls[0]).toMatchInlineSnapshot(`
-Array [
-  ~/some/path/to/tsconnfig.json,
-  {
-  "extends": "./node_modules/easy-scripts/dist/config/tsconfig.json",
-  "include": ["custom-src", "types"],
-  "compilerOptions": {
-    "declarationDir": "custom-dist"
-  }
-},
-]
-`)
+    Array [
+      ~/some/path/to/tsconnfig.json,
+      {
+      "extends": "./node_modules/@origin-digital/origin-scripts/dist/config/tsconfig.json",
+      "include": ["custom-src", "types"],
+      "compilerOptions": {
+        "declarationDir": "custom-dist"
+      }
+    },
+    ]
+  `)
   expect(promptsMock).toHaveBeenCalledTimes(2)
   expect(promptsMock.mock.calls[0]).toMatchInlineSnapshot(`
-Array [
-  Object {
-    initial: true,
-    message: Create a tsconfig.json?,
-    name: shouldCreate,
-    type: confirm,
-  },
-]
-`)
+    Array [
+      Object {
+        initial: true,
+        message: Create a tsconfig.json?,
+        name: shouldCreate,
+        type: confirm,
+      },
+    ]
+  `)
   expect(promptsMock.mock.calls[1]).toMatchInlineSnapshot(`
-Array [
-  Array [
-    Object {
-      initial: src,
-      message: What is the name of your source directory?,
-      name: src,
-      type: text,
-    },
-    Object {
-      initial: dist,
-      message: What is the name of your dist directory?,
-      name: dist,
-      type: text,
-    },
-  ],
-]
-`)
+    Array [
+      Array [
+        Object {
+          initial: src,
+          message: What is the name of your source directory?,
+          name: src,
+          type: text,
+        },
+        Object {
+          initial: dist,
+          message: What is the name of your dist directory?,
+          name: dist,
+          type: text,
+        },
+      ],
+    ]
+  `)
 })
