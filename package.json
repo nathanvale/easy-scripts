@@ -21,7 +21,6 @@
     "dist"
   ],
   "scripts": {
-    "add-contributor": "node src contributors add",
     "build": "node src build",
     "commit": "commit",
     "format": "node src format",
@@ -104,6 +103,7 @@
   "devDependencies": {
     "jest-in-case": "^1.0.2",
     "slash": "^2.0.0",
+    "styled-components": "*",
     "typescript": "*"
   },
   "engines": {
