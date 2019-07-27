@@ -33,7 +33,7 @@ function build() {
   const watch = parsedArgs.watch ? '--watch' : ''
   const sizeSnapshot = parsedArgs['size-snapshot']
 
-  let formats = ['esm', 'cjs', 'umd', 'umd.min']
+  let formats = ['esm', 'cjs' /* , 'umd', 'umd.min' */]
 
   if (typeof parsedArgs.bundle === 'string') {
     formats = parsedArgs.bundle.split(',')

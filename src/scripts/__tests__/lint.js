@@ -89,13 +89,13 @@ function withThrownError(setupFn) {
 
     return function teardown() {
       expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
-Call 1:
-  Argument 1:
-    Linting FAILED :(
-Call 2:
-  Argument 1:
-    Error: some crazy error
-`)
+        Call 1:
+          Argument 1:
+            Linting FAILED ¯_(ツ)_/¯
+        Call 2:
+          Argument 1:
+            Error: some crazy error
+      `)
       teardownFn()
     }
   }
@@ -125,10 +125,10 @@ function withEslintFail(setupFn) {
     const teardownFn = setupFn()
     return function teardown() {
       expect(prettyCalls(printMock.mock.calls)).toMatchInlineSnapshot(`
-Call 1:
-  Argument 1:
-    Linting FAILED :(
-`)
+        Call 1:
+          Argument 1:
+            Linting FAILED ¯_(ツ)_/¯
+      `)
       teardownFn()
     }
   }
