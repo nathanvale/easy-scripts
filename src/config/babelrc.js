@@ -12,6 +12,7 @@ const hasBabelRuntimeDep = Boolean(
   pkg.dependencies && pkg.dependencies['@babel/runtime-corejs3'],
 )
 const isCJS = BUILD_FORMAT === 'cjs'
+const isMonorepo = pkg.workspaces
 const isRollup = parseEnv('BUILD_ROLLUP', false)
 const isTest = (BABEL_ENV || NODE_ENV) === 'test'
 const isUMD = BUILD_FORMAT === 'umd'
@@ -20,7 +21,7 @@ const RUNTIME_HELPERS_WARN =
   'You should add @babel/runtime-corejs3 as dependency to your package. It will allow reusing so-called babel helpers from npm rather than bundling their copies into your files.'
 const treeshake = parseEnv('BUILD_TREESHAKE', isRollup || isWebpack)
 
-if (!treeshake && !hasBabelRuntimeDep) {
+if (!isMonorepo && !treeshake && !hasBabelRuntimeDep) {
   throw new Error(RUNTIME_HELPERS_WARN)
 }
 
@@ -69,15 +70,17 @@ module.exports = () => ({
       : false,
   ].filter(Boolean),
   plugins: [
-    [
-      require.resolve('@babel/plugin-transform-runtime'),
-      {
-        corejs: {version: 3, proposals: true},
-        helpers: true,
-        regenerator: true,
-        useESModules: treeshake && !isCJS,
-      },
-    ],
+    isTest
+      ? null
+      : [
+          require.resolve('@babel/plugin-transform-runtime'),
+          {
+            corejs: {version: 3, proposals: true},
+            helpers: true,
+            regenerator: true,
+            useESModules: treeshake && !isCJS,
+          },
+        ],
     require.resolve('babel-plugin-macros'),
     alias
       ? [
