@@ -103,7 +103,8 @@
   },
   "devDependencies": {
     "jest-in-case": "^1.0.2",
-    "slash": "^2.0.0"
+    "slash": "^2.0.0",
+    "typescript": "*"
   },
   "engines": {
     "node": ">= 8",
