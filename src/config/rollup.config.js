@@ -136,9 +136,8 @@ const config = {
     isNode ? nodeBuiltIns() : null,
     isNode ? nodeGlobals() : null,
     nodeResolve({
+      mainFields: ['module', 'main'],
       preferBuiltins: isNode,
-      jsnext: true,
-      main: true,
       extensions,
     }),
     commonjs({include: 'node_modules/**'}),

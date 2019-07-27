@@ -12,5 +12,6 @@ module.exports = {
   ].filter(Boolean),
   rules: {
     'import/no-unresolved': ifTypescriptProject('off', 'error'),
+    'jest/no-standalone-expect': 'off',
   },
 }

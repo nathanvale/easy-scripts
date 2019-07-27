@@ -57,7 +57,8 @@ function lint() {
     )
 
     if (result.status > 0) {
-      print(`Linting FAILED :(`)
+      // eslint-disable-next-line no-useless-escape
+      print(`Linting FAILED ¯\_(ツ)_/¯`)
       // eslint-disable-next-line no-process-exit
       process.exit(1)
     } else {
@@ -67,7 +68,8 @@ function lint() {
     // eslint-disable-next-line no-process-exit
     process.exit(result.status)
   } catch (error) {
-    print(`Linting FAILED :(`)
+    // eslint-disable-next-line no-useless-escape
+    print(`Linting FAILED ¯\_(ツ)_/¯`)
     print(error)
     // eslint-disable-next-line no-process-exit
     process.exit(1)
