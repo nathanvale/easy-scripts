@@ -12,7 +12,7 @@ module.exports = {
   '**/*package.json': [
     hasAnyDep('lerna') ? () => `${resolveBin('lerna')} link convert` : false,
     ifAnyDep('lerna', 'yarn bootstrap'),
-    'prettier-package-json --write',
+    `${resolveBin('prettier-package-json')} --write`,
     'git add',
     ifAnyDep('lerna', 'git add yarn.lock'),
   ].filter(Boolean),
