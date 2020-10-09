@@ -1,3 +1,10 @@
+# [2.9.0-beta.4](https://github.com/nathanvale/easy-scripts/compare/v2.9.0-beta.3...v2.9.0-beta.4) (2020-10-09)
+
+
+### Bug Fixes
+
+* remove npm registry ([74632f1](https://github.com/nathanvale/easy-scripts/commit/74632f1))
+
 # [2.9.0-beta.3](https://github.com/nathanvale/easy-scripts/compare/v2.9.0-beta.2...v2.9.0-beta.3) (2020-10-09)
 
 
