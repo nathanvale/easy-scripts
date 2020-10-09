@@ -1,3 +1,10 @@
+# [2.9.0-beta.5](https://github.com/nathanvale/easy-scripts/compare/v2.9.0-beta.4...v2.9.0-beta.5) (2020-10-09)
+
+
+### Features
+
+* update readme ([0fd3fb2](https://github.com/nathanvale/easy-scripts/commit/0fd3fb2))
+
 # [2.9.0-beta.4](https://github.com/nathanvale/easy-scripts/compare/v2.9.0-beta.3...v2.9.0-beta.4) (2020-10-09)
 
 
