@@ -1,29 +1,29 @@
-const spawn = require('cross-spawn')
-const rimraf = require('rimraf')
+const spawn = require("cross-spawn");
+const rimraf = require("rimraf");
 const {
   fromRoot,
   fromConfigs,
   resolveBin,
   useBuiltInBabelConfig,
-} = require('../../utils')
+} = require("../../utils");
 
 function build() {
-  const args = process.argv.slice(2)
-  const useBuiltinConfig = useBuiltInBabelConfig(args)
+  const args = process.argv.slice(2).filter((arg) => arg !== "--monorepo");
+  const useBuiltinConfig = useBuiltInBabelConfig(args);
 
   const config = useBuiltinConfig
-    ? ['--presets', fromConfigs('babelrc.js')]
-    : []
-  const builtInIgnore = '**/__tests__/**,**/__mocks__/**'
+    ? ["--presets", fromConfigs("babelrc.js")]
+    : [];
+  const builtInIgnore = "**/__tests__/**,**/__mocks__/**";
 
-  const ignore = args.includes('--ignore') ? [] : ['--ignore', builtInIgnore]
+  const ignore = args.includes("--ignore") ? [] : ["--ignore", builtInIgnore];
 
-  const copyFiles = args.includes('--no-copy-files') ? [] : ['--copy-files']
-  const useSpecifiedOutDir = args.includes('--out-dir')
-  const outDir = useSpecifiedOutDir ? [] : ['--out-dir', 'dist']
+  const copyFiles = args.includes("--no-copy-files") ? [] : ["--copy-files"];
+  const useSpecifiedOutDir = args.includes("--out-dir");
+  const outDir = useSpecifiedOutDir ? [] : ["--out-dir", "dist"];
 
-  if (!useSpecifiedOutDir && !args.includes('--no-clean')) {
-    rimraf.sync(fromRoot('dist'))
+  if (!useSpecifiedOutDir && !args.includes("--no-clean")) {
+    rimraf.sync(fromRoot("dist"));
   }
 
   const finalArgs = [
@@ -31,20 +31,20 @@ function build() {
     ...config,
     ...copyFiles,
     ...ignore,
-    'src',
-  ].concat(args)
+    "src",
+  ].concat(args);
 
   const result = spawn.sync(
-    resolveBin('@babel/cli', {executable: 'babel'}),
+    resolveBin("@babel/cli", { executable: "babel" }),
     finalArgs,
     {
-      stdio: 'inherit',
-    },
-  )
+      stdio: "inherit",
+    }
+  );
 
-  return result
+  return result;
 }
 
 module.exports = {
   build,
-}
+};

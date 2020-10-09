@@ -1,1 +1,1 @@
-require('./build-library')
+require("./build-library");

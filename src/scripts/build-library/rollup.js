@@ -1,103 +1,103 @@
-const path = require('path')
-const spawn = require('cross-spawn')
-const glob = require('glob')
-const rimraf = require('rimraf')
-const yargsParser = require('yargs-parser')
+const path = require("path");
+const spawn = require("cross-spawn");
+const glob = require("glob");
+const rimraf = require("rimraf");
+const yargsParser = require("yargs-parser");
 const {
   hasFile,
   resolveBin,
   fromRoot,
   getConcurrentlyArgs,
   writeExtraEntry,
-} = require('../../utils')
+} = require("../../utils");
 
 function build() {
-  const crossEnv = resolveBin('cross-env')
-  const rollup = resolveBin('rollup')
-  const args = process.argv.slice(2)
-  const here = p => path.join(__dirname, p)
-  const hereRelative = p => here(p).replace(process.cwd(), '.')
-  const parsedArgs = yargsParser(args)
+  const crossEnv = resolveBin("cross-env");
+  const rollup = resolveBin("rollup");
+  const args = process.argv.slice(2);
+  const here = (p) => path.join(__dirname, p);
+  const hereRelative = (p) => here(p).replace(process.cwd(), ".");
+  const parsedArgs = yargsParser(args);
 
   const useBuiltinConfig =
-    !args.includes('--config') && !hasFile('rollup.config.js')
+    !args.includes("--config") && !hasFile("rollup.config.js");
   const config = useBuiltinConfig
-    ? `--config ${hereRelative('../../config/rollup.config.js')}`
-    : args.includes('--config')
-    ? ''
-    : '--config' // --config will pick up the rollup.config.js file
+    ? `--config ${hereRelative("../../config/rollup.config.js")}`
+    : args.includes("--config")
+    ? ""
+    : "--config"; // --config will pick up the rollup.config.js file
 
   const environment = parsedArgs.environment
     ? `--environment ${parsedArgs.environment}`
-    : ''
-  const watch = parsedArgs.watch ? '--watch' : ''
-  const sizeSnapshot = parsedArgs['size-snapshot']
+    : "";
+  const watch = parsedArgs.watch ? "--watch" : "";
+  const sizeSnapshot = parsedArgs["size-snapshot"];
 
-  let formats = ['esm', 'cjs' /* , 'umd', 'umd.min' */]
+  let formats = ["esm", "cjs"];
 
-  if (typeof parsedArgs.bundle === 'string') {
-    formats = parsedArgs.bundle.split(',')
+  if (typeof parsedArgs.bundle === "string") {
+    formats = parsedArgs.bundle.split(",");
   }
 
-  const defaultEnv = 'BUILD_ROLLUP=true'
+  const defaultEnv = "BUILD_ROLLUP=true";
 
   const getCommand = (env, ...flags) =>
     [crossEnv, defaultEnv, env, rollup, config, environment, watch, ...flags]
       .filter(Boolean)
-      .join(' ')
+      .join(" ");
 
-  const buildPreact = args.includes('--p-react')
+  const buildPreact = args.includes("--p-react");
   const scripts = buildPreact
     ? getPReactScripts()
-    : getConcurrentlyArgs(getCommands())
+    : getConcurrentlyArgs(getCommands());
 
-  const cleanBuildDirs = !args.includes('--no-clean')
+  const cleanBuildDirs = !args.includes("--no-clean");
 
   if (cleanBuildDirs) {
-    rimraf.sync(fromRoot('dist'))
+    rimraf.sync(fromRoot("dist"));
 
     if (buildPreact) {
-      rimraf.sync(fromRoot('preact'))
+      rimraf.sync(fromRoot("preact"));
     }
   }
-  const result = spawn.sync(resolveBin('concurrently'), scripts, {
-    stdio: 'inherit',
-  })
+  const result = spawn.sync(resolveBin("concurrently"), scripts, {
+    stdio: "inherit",
+  });
 
   if (
     result.status === 0 &&
     buildPreact &&
-    !args.includes('--no-package-json')
+    !args.includes("--no-package-json")
   ) {
     writeExtraEntry(
-      'preact',
+      "preact",
       {
-        cjs: glob.sync(fromRoot('preact/**/*.cjs.js'))[0],
-        esm: glob.sync(fromRoot('preact/**/*.esm.js'))[0],
+        cjs: glob.sync(fromRoot("preact/**/*.cjs.js"))[0],
+        esm: glob.sync(fromRoot("preact/**/*.esm.js"))[0],
       },
-      false,
-    )
+      false
+    );
   }
 
   function getPReactScripts() {
-    const reactCommands = prefixKeys('react.', getCommands())
-    const preactCommands = prefixKeys('preact.', getCommands({preact: true}))
-    return getConcurrentlyArgs(Object.assign(reactCommands, preactCommands))
+    const reactCommands = prefixKeys("react.", getCommands());
+    const preactCommands = prefixKeys("preact.", getCommands({ preact: true }));
+    return getConcurrentlyArgs(Object.assign(reactCommands, preactCommands));
   }
 
   function prefixKeys(prefix, object) {
     return Object.entries(object).reduce((cmds, [key, value]) => {
-      cmds[`${prefix}${key}`] = value
-      return cmds
-    }, {})
+      cmds[`${prefix}${key}`] = value;
+      return cmds;
+    }, {});
   }
 
-  function getCommands({preact = false} = {}) {
+  function getCommands({ preact = false } = {}) {
     return formats.reduce((cmds, format) => {
-      const [formatName, minify = false] = format.split('.')
-      const nodeEnv = minify ? 'production' : 'development'
-      const sourceMap = formatName === 'umd' ? '--sourcemap' : ''
-      const buildMinify = Boolean(minify)
+      const [formatName, minify = false] = format.split(".");
+      const nodeEnv = minify ? "production" : "development";
+      const sourceMap = formatName === "umd" ? "--sourcemap" : "";
+      const buildMinify = Boolean(minify);
 
       cmds[format] = getCommand(
         [
@@ -108,15 +108,15 @@ function build() {
           `BUILD_SIZE_SNAPSHOT=${sizeSnapshot}`,
           `BUILD_NODE=${process.env.BUILD_NODE || false}`,
           `BUILD_REACT_NATIVE=${process.env.BUILD_REACT_NATIVE || false}`,
-        ].join(' '),
-        sourceMap,
-      )
-      return cmds
-    }, {})
+        ].join(" "),
+        sourceMap
+      );
+      return cmds;
+    }, {});
   }
-  return result
+  return result;
 }
 
 module.exports = {
   build,
-}
+};

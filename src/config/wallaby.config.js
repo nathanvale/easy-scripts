@@ -1,35 +1,35 @@
-process.env.BABEL_ENV = 'test'
-process.env.NODE_ENV = 'test'
+process.env.BABEL_ENV = "test";
+process.env.NODE_ENV = "test";
 
-const jestConfig = require('./jest.config')
-const babelrc = require('./babelrc')()
+const jestConfig = require("./jest.config");
+const babelrc = require("./babelrc")();
 
 const files = [
-  './src/**/*.json',
+  "./src/**/*.json",
   ...jestConfig.collectCoverageFrom,
-  ...jestConfig.testMatch.map(file => `!${file}`),
-  '!dist',
-  '!node_modules',
-]
+  ...jestConfig.testMatch.map((file) => `!${file}`),
+  "!dist",
+  "!node_modules",
+];
 
-const tests = [...jestConfig.testMatch, '!node_modules', '!dist']
+const tests = [...jestConfig.testMatch, "!node_modules", "!dist"];
 // eslint-disable-next-line func-names
-module.exports = function(wallaby) {
+module.exports = function (wallaby) {
   const config = {
     debug: true,
     env: {
-      type: 'node',
-      runner: 'node',
+      type: "node",
+      runner: "node",
     },
-    testFramework: 'jest',
+    testFramework: "jest",
     files,
     tests,
     compilers: {
-      '**/*.{js,ts,tsx}': wallaby.compilers.babel({
+      "**/*.{js,ts,tsx}": wallaby.compilers.babel({
         babelrc: true,
         ...babelrc,
       }),
     },
-  }
-  return config
-}
+  };
+  return config;
+};

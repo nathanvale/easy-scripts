@@ -1,50 +1,58 @@
 /* eslint-disable no-useless-escape */
-const {hasTypescriptFiles, print} = require('../../utils')
+const { hasTypescriptFiles, print } = require("../../utils");
 
 function build() {
   try {
-    let result
+    let result;
     if (hasTypescriptFiles()) {
       //await verifyTypescript()
-      const useSpecifiedExtensions = process.argv.includes('--extensions')
+      const useSpecifiedExtensions = process.argv.includes("--extensions");
       if (!useSpecifiedExtensions) {
-        const extensions = ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx']
-        process.argv = [...process.argv, '--extensions', extensions.join(',')]
+        const extensions = [
+          ".es6",
+          ".es",
+          ".jsx",
+          ".js",
+          ".mjs",
+          ".ts",
+          ".tsx",
+        ];
+        process.argv = [...process.argv, "--extensions", extensions.join(",")];
       }
-      const useSpecifiedSourceMaps = process.argv.includes('--source-maps')
+      const useSpecifiedSourceMaps = process.argv.includes("--source-maps");
       if (!useSpecifiedSourceMaps) {
-        process.argv = [...process.argv, '--source-maps', 'inline']
+        process.argv = [...process.argv, "--source-maps", "inline"];
       }
     }
-    if (process.argv.includes('--bundle')) {
-      result = require('./rollup').build()
+    if (process.argv.includes("--bundle")) {
+      result = require("./rollup").build();
     } else {
-      result = require('./babel').build()
+      result = require("./babel").build();
     }
 
     if (result.status > 0) {
-      print(`Build FAILED ¯\_(ツ)_/¯`)
+      print(`Build FAILED ¯\_(ツ)_/¯`);
       // eslint-disable-next-line no-process-exit
-      process.exit(1)
+      process.exit(1);
     }
-
-    if (result.status === 0 && hasTypescriptFiles()) {
-      process.argv = []
+    const isMonorepo = process.argv.includes("--monorepo");
+    if (result.status === 0 && hasTypescriptFiles() && !isMonorepo) {
+      process.argv = [];
       //TODO: move handling of result into build-types.js
-      result = require('../build-types').build()
+      result = require("../build-types").build();
       if (result.status > 0) {
-        print(`Compiling type declarations FAILED ¯\_(ツ)_/¯`)
+        print(`Compiling type declarations FAILED ¯\_(ツ)_/¯`);
         // eslint-disable-next-line no-process-exit
-        process.exit(1)
+        process.exit(1);
       } else {
-        print(`Successfully compiled type declarations.`)
+        print(`Successfully compiled type declarations.`);
       }
     }
   } catch (error) {
-    print(`Build FAILED ¯\_(ツ)_/¯`)
-    print(error)
+    print(`Build FAILED ¯\_(ツ)_/¯`);
+    print(error);
   }
 }
-;(async () => {
-  await build()
-})()
+(async () => {
+  await build();
+})();

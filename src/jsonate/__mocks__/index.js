@@ -1,25 +1,25 @@
-const actualModule = jest.requireActual('../index')
+const actualModule = jest.requireActual("../index");
 
 const __initialPackageState = {
   config: {},
-  configPath: '~/some/path/to/package.json',
-  filename: 'package.json',
+  configPath: "~/some/path/to/package.json",
+  filename: "package.json",
   isLoaded: true,
-}
+};
 
 const __initialTSConfigState = {
   config: {},
-  configPath: '~/some/path/to/tsconfig.json',
-  filename: 'tsconfig.json',
+  configPath: "~/some/path/to/tsconfig.json",
+  filename: "tsconfig.json",
   isLoaded: true,
-}
+};
 
 const __initialJSONState = {
   config: {},
-  configPath: '~/some/path/to/config.json',
-  filename: 'config.json',
+  configPath: "~/some/path/to/config.json",
+  filename: "config.json",
   isLoaded: true,
-}
+};
 
 const jsonManagerMock = {
   ...actualModule.jsonManager({
@@ -27,11 +27,11 @@ const jsonManagerMock = {
   }),
   load: jest.fn(),
   reload: jest.fn(),
-}
-const jsonManager = jest.fn(({initialState} = {}) => {
-  if (initialState) jsonManagerMock.setState(() => initialState)
-  return jsonManagerMock
-})
+};
+const jsonManager = jest.fn(({ initialState } = {}) => {
+  if (initialState) jsonManagerMock.setState(() => initialState);
+  return jsonManagerMock;
+});
 
 const tsConfigMock = {
   ...actualModule.tsConfigManager({
@@ -39,11 +39,11 @@ const tsConfigMock = {
   }),
   load: jest.fn(),
   reload: jest.fn(),
-}
-const tsConfigManager = jest.fn(({initialState} = {}) => {
-  if (initialState) tsConfigMock.setState(() => initialState)
-  return tsConfigMock
-})
+};
+const tsConfigManager = jest.fn(({ initialState } = {}) => {
+  if (initialState) tsConfigMock.setState(() => initialState);
+  return tsConfigMock;
+});
 
 const packageMock = {
   ...actualModule.packageManager({
@@ -51,11 +51,11 @@ const packageMock = {
   }),
   load: jest.fn(),
   reload: jest.fn(),
-}
-const packageManager = jest.fn(({initialState} = {}) => {
-  if (initialState) packageMock.setState(() => initialState)
-  return packageMock
-})
+};
+const packageManager = jest.fn(({ initialState } = {}) => {
+  if (initialState) packageMock.setState(() => initialState);
+  return packageMock;
+});
 
 module.exports = {
   __initialPackageState,
@@ -64,4 +64,4 @@ module.exports = {
   packageManager,
   tsConfigManager,
   jsonManager,
-}
+};
