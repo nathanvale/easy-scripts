@@ -1,11 +1,11 @@
-const spawn = require('cross-spawn')
-const {resolveBin} = require('../utils')
+const spawn = require("cross-spawn");
+const { resolveBin } = require("../utils");
 
-const args = process.argv.slice(2)
+const args = process.argv.slice(2);
 
-const tscResult = spawn.sync(resolveBin('tsc'), ['--noEmit', ...args], {
-  stdio: 'inherit',
-})
+const tscResult = spawn.sync(resolveBin("tsc"), ["--noEmit", ...args], {
+  stdio: "inherit",
+});
 
 // eslint-disable-next-line no-process-exit
-process.exit(tscResult.status)
+process.exit(tscResult.status);

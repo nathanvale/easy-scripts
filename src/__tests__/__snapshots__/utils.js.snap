@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getConcurrentlyArgs gives good args to pass to concurrently 1`] = `
+exports[`utils getConcurrentlyArgs gives good args to pass to concurrently 1`] = `
 Array [
   "--kill-others-on-fail",
   "--prefix",

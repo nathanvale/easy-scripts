@@ -1,3 +1,3 @@
-const {babel: babelConfig} = require('./src/config')
+const { babel: babelConfig } = require("./src/config");
 
-module.exports = Object.assign(babelConfig(), {})
+module.exports = Object.assign(babelConfig(), {});

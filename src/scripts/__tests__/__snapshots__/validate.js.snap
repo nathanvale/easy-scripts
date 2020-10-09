@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`validate allows you to specify your own npm scripts 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names specialbuild,specialtest,speciallint --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "npm run specialbuild --silent" "npm run specialtest --silent" "npm run speciallint --silent"`;
+exports[`scripts validate allows you to specify your own npm scripts 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names specialbuild,specialtest,speciallint --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "yarn specialbuild --silent" "yarn specialtest --silent" "yarn speciallint --silent"`;
 
-exports[`validate calls concurrently with all scripts 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "npm run build --silent" "npm run lint --silent" "npm run test --silent -- --coverage"`;
+exports[`scripts validate calls concurrently with all scripts 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "yarn build" "yarn lint --quiet" "yarn test --silent --all --coverage"`;
 
-exports[`validate does not include "build" if it doesn't have that script 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "npm run build --silent" "npm run lint --silent" "npm run test --silent -- --coverage"`;
+exports[`scripts validate does not include "build" if it doesn't have that script 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "yarn build" "yarn lint --quiet" "yarn test --silent --all --coverage"`;
 
-exports[`validate does not include "flow" if it doesn't have that script 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "npm run build --silent" "npm run lint --silent" "npm run test --silent -- --coverage"`;
+exports[`scripts validate does not include "flow" if it doesn't have that script 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "yarn build" "yarn lint --quiet" "yarn test --silent --all --coverage"`;
 
-exports[`validate does not include "lint" if it doesn't have that script 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "npm run build --silent" "npm run lint --silent" "npm run test --silent -- --coverage"`;
+exports[`scripts validate does not include "lint" if it doesn't have that script 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "yarn build" "yarn lint --quiet" "yarn test --silent --all --coverage"`;
 
-exports[`validate does not include "test" if it doesn't have that script 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "npm run build --silent" "npm run lint --silent" "npm run test --silent -- --coverage"`;
+exports[`scripts validate does not include "test" if it doesn't have that script 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build,lint,test --prefix-colors bgBlue.bold.reset,bgGreen.bold.reset,bgMagenta.bold.reset "yarn build" "yarn lint --quiet" "yarn test --silent --all --coverage"`;
 
-exports[`validate doesn't use test or lint if it's in pre-commit 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build --prefix-colors bgBlue.bold.reset "npm run build --silent"`;
+exports[`scripts validate doesn't use test or lint if it's in pre-commit 1`] = `concurrently --kill-others-on-fail --prefix [{name}] --names build --prefix-colors bgBlue.bold.reset "yarn build"`;
