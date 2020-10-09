@@ -151,9 +151,6 @@
     "node": ">= 8",
     "npm": ">= 5"
   },
-  "publishConfig": {
-    "registry": "https://github.com/nathanvale/easy-scripts.git"
-  },
   "husky": {
     "hooks": {
       "commit-msg": "node src commitlint -e $HUSKY_GIT_PARAMS",
