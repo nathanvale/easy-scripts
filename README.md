@@ -8,7 +8,7 @@
 
 ## The problem
 
-Configuring and maintaining all the dependencies we have to other developer's code is repetitive work and a cognitive load for us all.
+Configuring and maintaining all the dependencies we have to other developer's code is repetitive work and a cognitive load for us all!
 
 ## This solution
 
@@ -18,6 +18,7 @@ A CLI tool that abstracts away all our configuration needs, such as linting, tes
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 
 - [Installation](#installation)
 - [Usage](#usage)
