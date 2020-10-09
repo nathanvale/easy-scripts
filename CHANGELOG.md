@@ -1,3 +1,10 @@
+# [2.9.0-beta.3](https://github.com/nathanvale/easy-scripts/compare/v2.9.0-beta.2...v2.9.0-beta.3) (2020-10-09)
+
+
+### Features
+
+* remove webpack.config ([58c259d](https://github.com/nathanvale/easy-scripts/commit/58c259d))
+
 # [2.9.0-beta.2](https://github.com/nathanvale/easy-scripts/compare/v2.9.0-beta.1...v2.9.0-beta.2) (2020-10-09)
 
 
