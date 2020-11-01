@@ -15,6 +15,7 @@ const useDefaultScripts = typeof validateScripts !== "string";
 
 const scripts = useDefaultScripts
   ? {
+      format: ifScript("format", "yarn format --check --no-write"),
       build: ifScript("build", "yarn build"),
       lint: preCommit ? null : ifScript("lint", "yarn lint --quiet"),
       stylelint: preCommit
