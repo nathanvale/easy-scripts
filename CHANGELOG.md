@@ -1,3 +1,10 @@
+# [2.9.0-beta.6](https://github.com/nathanvale/easy-scripts/compare/v2.9.0-beta.5...v2.9.0-beta.6) (2020-11-01)
+
+
+### Features
+
+* add format check on validate ([49eba59](https://github.com/nathanvale/easy-scripts/commit/49eba59))
+
 # [2.9.0-beta.5](https://github.com/nathanvale/easy-scripts/compare/v2.9.0-beta.4...v2.9.0-beta.5) (2020-10-09)
 
 
