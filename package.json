@@ -130,7 +130,7 @@
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-size-snapshot": "^0.8.0",
     "rollup-plugin-terser": "^4.0.4",
-    "semantic-release": "^16.0.0",
+    "semantic-release": "^17.2.3",
     "semver": "^7.3.2",
     "sort-package-json": "^1.46.0",
     "stylelint": "^13.7.2",
